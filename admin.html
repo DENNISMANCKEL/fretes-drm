@@ -6,17 +6,19 @@
   <style>
     body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; }
     h1 { text-align: center; color: #2a5d9f; }
-    form { background: white; padding: 20px; border-radius: 8px; margin: 20px auto; max-width: 800px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    form, table { background: white; padding: 20px; border-radius: 8px; margin: 20px auto; max-width: 800px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
     label, input, textarea { display: block; width: 100%; margin-top: 10px; }
     input, textarea { padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
     button { background: #2a5d9f; color: white; padding: 10px; margin-top: 15px; border: none; border-radius: 4px; cursor: pointer; }
-    .msg { margin-top: 15px; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+    th, td { padding: 10px; border: 1px solid #ccc; }
+    th { background-color: #eee; }
   </style>
 </head>
 <body>
   <h1>Área Administrativa - DRM</h1>
 
-  <form id="form-carga">
+  <form action="https://script.google.com/macros/s/AKfycbxQgffGsEC638_xgvtTpRnmMWUWhFW7qoF3OsnS8M0aq8WddEPCGECE_YZB6GWV6slROg/exec" method="POST">
     <label>Origem:</label><input type="text" name="origem" required>
     <label>Destino:</label><input type="text" name="destino" required>
     <label>Veículo:</label><input type="text" name="veiculo" required>
@@ -26,45 +28,10 @@
     <label>WhatsApp:</label><input type="text" name="whatsapp" required>
     <label>Observação:</label><textarea name="observacao"></textarea>
     <button type="submit">Cadastrar Carga</button>
-    <div class="msg" id="mensagem"></div>
   </form>
 
   <div style="text-align:center">
     <button onclick="location.href='motorista.html'">Visualizar como Motorista</button>
   </div>
-
-  <script>
-    document.getElementById("form-carga").addEventListener("submit", function(e) {
-      e.preventDefault(); // evita o recarregamento
-
-      const form = e.target;
-      const dados = {
-        origem: form.origem.value,
-        destino: form.destino.value,
-        veiculo: form.veiculo.value,
-        tipo: form.tipo.value,
-        rastreado: form.rastreado.value,
-        valor: form.valor.value,
-        whatsapp: form.whatsapp.value,
-        observacao: form.observacao.value
-      };
-
-      fetch("https://script.google.com/macros/s/AKfycbxQgffGsEC638_xgvtTpRnmMWUWhFW7qoF3OsnS8M0aq8WddEPCGECE_YZB6GWV6slROg/exec", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(dados)
-      })
-      .then(res => res.text())
-      .then(msg => {
-        document.getElementById("mensagem").innerText = msg;
-        form.reset();
-      })
-      .catch(erro => {
-        document.getElementById("mensagem").innerText = "Erro ao enviar: " + erro;
-      });
-    });
-  </script>
 </body>
 </html>
