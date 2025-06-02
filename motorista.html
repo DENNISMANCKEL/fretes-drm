@@ -45,26 +45,26 @@
 
   <script>
     fetch("https://script.google.com/macros/s/AKfycbzCJ2dvIuptehOf-x1Ir9bB3BFLSu0X4Ua-LZAy1RdXUH3lImhFqtmO6OYL0ILyqTSRmw/exec")
-      .then(res => res.json())
-      .then(cargas => {
-        const lista = document.getElementById("lista-cargas");
-        lista.innerHTML = "";
-        cargas.forEach(carga => {
-          const li = document.createElement("li");
-          li.innerHTML = `
-            <strong>${carga.origem} → ${carga.destino}</strong><br>
-            Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | R$: ${carga.valor}<br>
-            <a href="https://wa.me/${carga.whatsapp.replace(/\\D/g, '')}?text=Tenho%20interesse%20na%20carga%20${carga.origem}%20para%20${carga.destino}" target="_blank" class="btn">Tenho Interesse</a>
-            <hr>
-          `;
-          lista.appendChild(li);
-        });
-      })
-      .catch(err => {
-        const lista = document.getElementById("lista-cargas");
-        lista.innerHTML = "❌ Erro ao carregar cargas.";
-        console.error("Erro ao buscar cargas:", err);
-      });
+  .then(res => res.json())
+  .then(cargas => {
+    const lista = document.getElementById("lista-cargas");
+    lista.innerHTML = "";
+    cargas.forEach(carga => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <strong>${carga.origem} → ${carga.destino}</strong><br>
+        Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | R$: ${carga.valor}<br>
+        <a href="https://wa.me/${carga.whatsapp.replace(/\\D/g, '')}?text=Tenho%20interesse%20na%20carga%20${carga.origem}%20para%20${carga.destino}" target="_blank" class="btn">Tenho Interesse</a>
+        <hr>
+      `;
+      lista.appendChild(li);
+    });
+  })
+  .catch(err => {
+    const lista = document.getElementById("lista-cargas");
+    lista.innerHTML = "❌ Erro ao carregar cargas.";
+    console.error("Erro ao buscar cargas:", err);
+  });
   </script>
 </body>
 </html>
