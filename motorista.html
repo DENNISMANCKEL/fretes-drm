@@ -15,7 +15,9 @@
 <body>
   <section>
     <h2>Cargas em Oferta</h2>
-    <ul id="lista-cargas">Carregando cargas...</ul>
+    <p>Clique abaixo para ver as cargas disponíveis:</p>
+    <button class="btn" onclick="window.location.reload()">Atualizar Lista</button>
+    <ul id="lista-cargas"></ul>
   </section>
 
   <section>
@@ -45,26 +47,25 @@
 
   <script>
     fetch("https://script.google.com/macros/s/AKfycbzCJ2dvIuptehOf-x1Ir9bB3BFLSu0X4Ua-LZAy1RdXUH3lImhFqtmO6OYL0ILyqTSRmw/exec")
-  .then(res => res.json())
-  .then(cargas => {
-    const lista = document.getElementById("lista-cargas");
-    lista.innerHTML = "";
-    cargas.forEach(carga => {
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <strong>${carga.origem} → ${carga.destino}</strong><br>
-        Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | R$: ${carga.valor}<br>
-        <a href="https://wa.me/${carga.whatsapp.replace(/\\D/g, '')}?text=Tenho%20interesse%20na%20carga%20${carga.origem}%20para%20${carga.destino}" target="_blank" class="btn">Tenho Interesse</a>
-        <hr>
-      `;
-      lista.appendChild(li);
-    });
-  })
-  .catch(err => {
-    const lista = document.getElementById("lista-cargas");
-    lista.innerHTML = "❌ Erro ao carregar cargas.";
-    console.error("Erro ao buscar cargas:", err);
-  });
+      .then(res => res.json())
+      .then(cargas => {
+        const lista = document.getElementById("lista-cargas");
+        lista.innerHTML = "";
+        cargas.forEach(carga => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <strong>${carga.origem} → ${carga.destino}</strong><br>
+            Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | R$: ${carga.valor}<br>
+            <a href="https://wa.me/${carga.whatsapp.replace(/\D/g, '')}?text=Tenho%20interesse%20na%20carga%20${carga.origem}%20para%20${carga.destino}" target="_blank" class="btn">Tenho Interesse</a>
+            <hr>
+          `;
+          lista.appendChild(li);
+        });
+      })
+      .catch(error => {
+        document.getElementById("lista-cargas").innerHTML = "<li>Erro ao carregar cargas disponíveis.</li>";
+        console.error("Erro ao buscar dados:", error);
+      });
   </script>
 </body>
 </html>
