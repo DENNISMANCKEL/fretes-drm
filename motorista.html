@@ -54,16 +54,16 @@
       .then(cargas => {
         const lista = document.getElementById("lista-cargas");
         lista.innerHTML = "";
-        cargas.forEach(carga => {
-          const li = document.createElement("li");
-          li.innerHTML = `
-            <strong>${carga.origem} → ${carga.destino}</strong><br>
-            Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | R$: ${carga.valor}<br>
-            <a href="https://wa.me/${(carga.whatsapp || '').replace(/\D/g, '')}?text=Tenho%20interesse%20na%20carga%20${carga.origem}%20para%20${carga.destino}" target="_blank" class="btn">Tenho Interesse</a>
-            <hr>
-          `;
-          lista.appendChild(li);
-        });
+       cargas.forEach(carga => {
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <strong>${carga.origem} → ${carga.destino}</strong><br>
+    Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | R$: ${carga.valor}<br>
+    <a href="https://wa.me/${(carga.whatsapp || "").toString().replace(/\D/g, '')}?text=Tenho%20interesse%20na%20carga%20${carga.origem}%20para%20${carga.destino}" target="_blank" class="btn">Tenho Interesse</a>
+    <hr>
+  `;
+  lista.appendChild(li);
+});
       })
       .catch(error => {
         document.getElementById("lista-cargas").innerHTML = "<li>Erro ao carregar cargas disponíveis.</li>";
