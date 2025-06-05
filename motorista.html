@@ -21,28 +21,27 @@
   </section>
 
   <script>
-   fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec")
-      .then(res => res.json())
-      .then(cargas => {
-        const lista = document.getElementById("lista-cargas");
-        lista.innerHTML = "";
-        cargas.forEach((carga) => {
-          const li = document.createElement("li");
-          li.innerHTML = `
-            <strong>${carga.origem} → ${carga.destino}</strong><br>
-            Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | R$: ${carga.valor}<br>
-            <a href="https://wa.me/${carga.whatsapp.replace(/\\D/g, '')}?text=Tenho%20interesse%20na%20carga%20de%20${carga.origem}%20para%20${carga.destino}" target="_blank" class="btn">Tenho Interesse (WhatsApp)</a>
-            <a href="documentos.html?frete_id=${encodeURIComponent(carga.origem + ' - ' + carga.destino)}" class="btn">Enviar Documentos</a>
-            <hr>
-          `;
-          lista.appendChild(li);
-        });
-      })
-      .catch(err => {
-        const lista = document.getElementById("lista-cargas");
-        lista.innerHTML = "❌ Erro ao carregar cargas.";
-        console.error("Erro ao buscar cargas:", err);
+  fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec")
+    .then(res => res.json())
+    .then(cargas => {
+      const lista = document.getElementById("lista-cargas");
+      lista.innerHTML = "";
+      cargas.forEach(carga => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${carga.origem} → ${carga.destino}</strong><br>
+          Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | R$: ${carga.valor}<br>
+          <a href="https://wa.me/${carga.whatsapp.replace(/\D/g, '')}?text=Tenho%20interesse%20na%20carga%20${carga.origem}%20para%20${carga.destino}" target="_blank" class="btn">Tenho Interesse</a>
+          <hr>
+        `;
+        lista.appendChild(li);
       });
-  </script>
+    })
+    .catch(err => {
+      const lista = document.getElementById("lista-cargas");
+      lista.innerHTML = "❌ Erro ao carregar cargas.";
+      console.error("Erro ao buscar cargas:", err);
+    });
+</script>
 </body>
 </html>
