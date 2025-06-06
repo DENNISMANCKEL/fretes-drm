@@ -2,46 +2,164 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Motorista - Cargas Disponíveis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fretes Disponíveis - Transportadora</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
-    section { background: white; padding: 20px; border-radius: 8px; margin: 20px auto; max-width: 800px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h2 { color: #2a5d9f; }
-    .btn { background: #2a5d9f; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; display: inline-block; text-decoration: none; }
-    label { font-weight: bold; display: block; margin-top: 15px; }
-    input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px; }
-    ul { padding-left: 0; list-style: none; }
-    li { margin-bottom: 25px; }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f8f8f8; }
+    header { background: #2a5d9f; color: #fff; padding: 15px; text-align: center; }
+    .fretes, .formulario, .contato, .carga { padding: 20px; max-width: 800px; margin: auto; background: #fff; margin-top: 20px; border-radius: 8px; }
+    .frete { border-bottom: 1px solid #ccc; padding: 10px 0; }
+    .btn { background: #2a5d9f; color: #fff; padding: 10px 15px; border: none; border-radius: 4px; text-decoration: none; display: inline-block; margin-top: 10px; cursor: pointer; }
+    input, textarea { width: 100%; padding: 10px; margin: 5px 0 15px; border-radius: 4px; border: 1px solid #ccc; }
+    label { font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f0f0f0; }
   </style>
 </head>
 <body>
-  <section>
-    <h2>Cargas em Oferta</h2>
-    <ul id="lista-cargas">Carregando cargas...</ul>
+  <header>
+    <h1>Fretes Disponíveis</h1>
+  </header>
+
+  <section class="fretes">
+    <h2>Ofertas de Carga</h2>
+    <div class="frete">
+      <p><strong>Origem:</strong> Taubaté/SP</p>
+      <p><strong>Destino:</strong> São Paulo/SP</p>
+      <p><strong>Tipo:</strong> Carga seca</p>
+      <p><strong>Valor:</strong> R$ 1.200,00</p>
+      <a href="https://wa.me/+5512991982723?text=Tenho%20interesse%20no%20frete%20de%20Taubat%C3%A9%20para%20S%C3%A3o%20Paulo" class="btn">Tenho Interesse (WhatsApp)</a>
+    </div>
   </section>
 
- <script>
-  fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec")
-    .then(res => res.json())
-    .then(cargas => {
-      const lista = document.getElementById("lista-cargas");
-      lista.innerHTML = "";
-      cargas.forEach(carga => {
-        const li = document.createElement("li");
-        li.innerHTML = `
-          <strong>${carga.origem} → ${carga.destino}</strong><br>
-          Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | R$: ${carga.valor}<br>
-          <a href="https://wa.me/${carga.whatsapp.replace(/\D/g, '')}?text=Tenho%20interesse%20na%20carga%20${carga.origem}%20para%20${carga.destino}" target="_blank" class="btn">Tenho Interesse</a>
-          <hr>
-        `;
-        lista.appendChild(li);
-      });
-    })
-    .catch(err => {
-      const lista = document.getElementById("lista-cargas");
-      lista.innerHTML = "❌ Erro ao carregar cargas.";
-      console.error("Erro ao buscar cargas:", err);
+  <section class="carga">
+    <h2>Cadastrar Nova Carga</h2>
+    <form id="formularioCarga">
+      <label>Origem:</label>
+      <input type="text" id="origem" required>
+
+      <label>Destino:</label>
+      <input type="text" id="destino" required>
+
+      <label>Veículo:</label>
+      <input type="text" id="veiculo" required>
+
+      <label>Tipo:</label>
+      <input type="text" id="tipo" required>
+
+      <label>Rastreado (Sim/Não):</label>
+      <input type="text" id="rastreado" required>
+
+      <label>Valor:</label>
+      <input type="text" id="valor" required>
+
+      <label>WhatsApp:</label>
+      <input type="text" id="whatsapp" required>
+
+      <label>Observação:</label>
+      <textarea id="observacao"></textarea>
+
+      <button type="submit" class="btn">Cadastrar Carga</button>
+    </form>
+
+    <h3>Lista de Cargas</h3>
+    <table id="tabelaCargas">
+      <thead>
+        <tr>
+          <th>Origem</th>
+          <th>Destino</th>
+          <th>Veículo</th>
+          <th>Tipo</th>
+          <th>Rastreado</th>
+          <th>Valor</th>
+          <th>WhatsApp</th>
+          <th>Observação</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section class="formulario">
+    <h2>Cadastro de Motorista</h2>
+    <form action="https://formsubmit.co/programacao03@agilixlogistica.com.br" method="POST" enctype="multipart/form-data">
+      <!-- seus campos de motorista continuam aqui -->
+      <label>CNH (foto):</label>
+      <input type="file" name="cnh" required>
+      <!-- (os demais campos foram mantidos) -->
+      <button type="submit" class="btn">Enviar Documentos</button>
+    </form>
+  </section>
+
+  <section class="contato">
+    <h2>Envio de Comprovante de Descarga</h2>
+    <form action="https://formsubmit.co/programacao03@agilixlogistica.com.br" method="POST" enctype="multipart/form-data">
+      <label>Número do Frete:</label>
+      <input type="text" name="numero_frete" required>
+
+      <label>Foto do Comprovante de Descarga:</label>
+      <input type="file" name="comprovante_descarga" required>
+
+      <label>Observações:</label>
+      <textarea name="observacoes" rows="3"></textarea>
+
+      <button type="submit" class="btn">Enviar Comprovante</button>
+    </form>
+  </section>
+
+  <script>
+    const form = document.getElementById("formularioCarga");
+    const tabela = document.getElementById("tabelaCargas").querySelector("tbody");
+
+    const scriptURL = "COLE_AQUI_A_URL_DO_WEB_APP"; // ⬅️ Substitua com a URL real
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const dados = {
+        origem: origem.value,
+        destino: destino.value,
+        veiculo: veiculo.value,
+        tipo: tipo.value,
+        rastreado: rastreado.value,
+        valor: valor.value,
+        whatsapp: whatsapp.value,
+        observacao: observacao.value
+      };
+
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(dados),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.text())
+      .then(msg => {
+        alert(msg);
+
+        const novaLinha = document.createElement("tr");
+        Object.values(dados).forEach(dado => {
+          const td = document.createElement("td");
+          td.textContent = dado;
+          novaLinha.appendChild(td);
+        });
+
+        const tdAcao = document.createElement("td");
+        const btnRemover = document.createElement("button");
+        btnRemover.textContent = "Remover";
+        btnRemover.className = "btn";
+        btnRemover.onclick = () => novaLinha.remove();
+        tdAcao.appendChild(btnRemover);
+        novaLinha.appendChild(tdAcao);
+
+        tabela.appendChild(novaLinha);
+        form.reset();
+      })
+      .catch(error => alert("Erro ao enviar: " + error));
     });
-</script>
+  </script>
 </body>
 </html>
