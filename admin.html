@@ -89,18 +89,23 @@
     }
 
     function removerCarga(id) {
-      if (confirm("Tem certeza que deseja remover esta carga?")) {
-        fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec?id=" + id, {
-          method: "DELETE"
-        })
-          .then(res => res.text())
-          .then(msg => {
-            alert(msg);
-            carregarCargas();
-          })
-          .catch(() => alert("Erro ao tentar remover carga."));
-      }
-    }
+  if (confirm("Tem certeza que deseja remover esta carga?")) {
+    const params = new URLSearchParams();
+    params.append("acao", "excluir");
+    params.append("id", id);
+
+    fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec", {
+      method: "POST",
+      body: params
+    })
+      .then(res => res.text())
+      .then(msg => {
+        alert(msg);
+        carregarCargas();
+      })
+      .catch(() => alert("Erro ao tentar remover carga."));
+  }
+}
 
     window.onload = carregarCargas;
   </script>
