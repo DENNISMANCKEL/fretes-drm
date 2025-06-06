@@ -58,25 +58,25 @@
       }
 
       cargas.forEach(carga => {
-        const origem = carga.origem || "Origem não informada";
-        const destino = carga.destino || "Destino não informado";
-        const tipo = carga.tipo || "-";
-        const veiculo = carga.veiculo || "-";
-        const valor = carga.valor || "-";
-        const whatsapp = String(carga.whatsapp || "").replace(/\D/g, "");
-        const id = carga.id || "-";
+  const origem = carga.origem || "Origem não informada";
+  const destino = carga.destino || "Destino não informado";
+  const tipo = carga.tipo || "-";
+  const veiculo = carga.veiculo || "-";
+  const valor = carga.valor || "-";
+  const whatsapp = String(carga.whatsapp || "").replace(/\\D/g, "");
+  const id = carga.id || "-";
 
-        const li = document.createElement("li");
-li.innerHTML = `
-  <strong>ID: ${id}</strong><br>
-  <strong>${origem} → ${destino}</strong><br>
-  Tipo: ${tipo} | Veículo: ${veiculo} | Valor: R$ ${valor}<br>
-  <a href="https://wa.me/55${whatsapp}?text=Tenho%20interesse%20na%20carga%20${origem}%20para%20${destino}%20(ID%3A%20${id})" target="_blank" class="btn">Tenho Interesse</a>
-  <a href="documentos.html?frete_id=${id}" class="btn" style="background:#28a745; margin-left:5px;">📎 Enviar Documentos</a>
-  <hr>
-`;
-        lista.appendChild(li);
-      });
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <strong>ID: ${id}</strong><br>
+    <strong>${origem} → ${destino}</strong><br>
+    Tipo: ${tipo} | Veículo: ${veiculo} | Valor: ${valor}<br>
+    <a href="https://wa.me/55${whatsapp}?text=Tenho%20interesse%20na%20carga%20${origem}%20para%20${destino}%20(ID%3A%20${id})" target="_blank" class="btn">Tenho Interesse</a>
+    <a href="documentos.html?frete_id=${id}" class="btn" style="background:#28a745; margin-left:5px;">📎 Enviar Documentos</a>
+    <hr>
+  `;
+  lista.appendChild(li);
+});
     })
     .catch(err => {
       const lista = document.getElementById("lista-cargas");
