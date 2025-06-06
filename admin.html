@@ -97,13 +97,13 @@
           cargas.forEach(carga => {
             const li = document.createElement("li");
             li.style.marginBottom = "15px";
-            li.innerHTML = `
-              <strong>ID:</strong> ${carga.id}<br>
-              <strong>${carga.origem} → ${carga.destino}</strong><br>
-              Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | Valor: R$ ${carga.valor}<br>
-              <button onclick="removerCarga('${carga.id}')">🗑️ Remover</button>
-              <hr>
-            `;
+           li.innerHTML = `
+  <strong>ID:</strong> ${carga.id || "sem_id"}<br>
+  <strong>${carga.origem} → ${carga.destino}</strong><br>
+  Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | Valor: ${carga.valor}<br>
+  <button onclick="removerCarga('${carga.id}')">🗑️ Remover</button>
+  <hr>
+`;
             lista.appendChild(li);
           });
         })
