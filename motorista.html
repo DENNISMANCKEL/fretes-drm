@@ -47,39 +47,39 @@
   </section>
 
   <script>
-    fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec")
-      .then(res => res.json())
-      .then(cargas => {
-        const lista = document.getElementById("lista-cargas");
-        lista.innerHTML = "";
+  fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec")
+    .then(res => res.json())
+    .then(cargas => {
+      const lista = document.getElementById("lista-cargas");
+      lista.innerHTML = "";
 
-        if (!Array.isArray(cargas)) {
-          throw new Error("Resposta inesperada do servidor");
-        }
+      if (!Array.isArray(cargas)) {
+        throw new Error("Resposta inesperada do servidor");
+      }
 
-        cargas.forEach(carga => {
-          const origem = carga.origem || "Origem não informada";
-          const destino = carga.destino || "Destino não informado";
-          const tipo = carga.tipo || "-";
-          const veiculo = carga.veiculo || "-";
-          const valor = carga.valor || "-";
-          const whatsapp = (carga.whatsapp || "").replace(/\D/g, "");
+      cargas.forEach(carga => {
+        const origem = carga.origem || "Origem não informada";
+        const destino = carga.destino || "Destino não informado";
+        const tipo = carga.tipo || "-";
+        const veiculo = carga.veiculo || "-";
+        const valor = carga.valor || "-";
+        const whatsapp = String(carga.whatsapp || "").replace(/\D/g, "");
 
-          const li = document.createElement("li");
-          li.innerHTML = `
-            <strong>${origem} → ${destino}</strong><br>
-            Tipo: ${tipo} | Veículo: ${veiculo} | Valor: R$ ${valor}<br>
-            <a href="https://wa.me/55${whatsapp}?text=Tenho%20interesse%20na%20carga%20${origem}%20para%20${destino}" target="_blank" class="btn">Tenho Interesse</a>
-            <hr>
-          `;
-          lista.appendChild(li);
-        });
-      })
-      .catch(err => {
-        const lista = document.getElementById("lista-cargas");
-        lista.innerHTML = "❌ Erro ao carregar cargas.";
-        console.error("Erro ao buscar cargas:", err);
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${origem} → ${destino}</strong><br>
+          Tipo: ${tipo} | Veículo: ${veiculo} | Valor: R$ ${valor}<br>
+          <a href="https://wa.me/55${whatsapp}?text=Tenho%20interesse%20na%20carga%20${origem}%20para%20${destino}" target="_blank" class="btn">Tenho Interesse</a>
+          <hr>
+        `;
+        lista.appendChild(li);
       });
-  </script>
+    })
+    .catch(err => {
+      const lista = document.getElementById("lista-cargas");
+      lista.innerHTML = "❌ Erro ao carregar cargas.";
+      console.error("Erro ao buscar cargas:", err);
+    });
+</script>
 </body>
 </html>
