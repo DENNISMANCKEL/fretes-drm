@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema DRM - Fretes</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; text-align: center; padding: 50px; }
+    h1 { color: #2a5d9f; }
+    button {
+      background: #2a5d9f;
+      color: white;
+      padding: 15px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 15px;
+    }
+    button:hover { background-color: #1d447a; }
+  </style>
+</head>
+<body>
+  <h1>Sistema de Fretes - DRM</h1>
+  <p>Escolha uma opção:</p>
+  <button onclick="location.href='motorista.html'">Sou Motorista</button>
+  <button onclick="acessarAdmin()">Sou Administrador</button>
+
+  <script>
+    function acessarAdmin() {
+      const senha = prompt("Digite a senha de acesso:");
+      if (senha === "DRM250317@@!") {
+        window.location.href = "admin.html";
+      } else {
+        alert("Senha incorreta!");
+      }
+    }
+  </script>
+</body>
+</html>
