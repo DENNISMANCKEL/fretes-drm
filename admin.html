@@ -14,18 +14,13 @@
       border: none; border-radius: 5px; margin-top: 15px; cursor: pointer;
     }
     button:hover { background-color: #1d447a; }
-    #resultado-envio {
-      text-align: center;
-      color: green;
-      font-weight: bold;
-      margin-top: 20px;
-    }
+    #mensagem { text-align: center; margin-top: 20px; font-weight: bold; }
   </style>
 </head>
 <body>
   <h1>Painel Administrativo - Cadastrar Nova Carga</h1>
 
-  <form action="https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec" method="POST" target="hiddenFrame">
+  <form id="form-carga">
     <label>Origem:</label><input type="text" name="origem" required>
     <label>Destino:</label><input type="text" name="destino" required>
     <label>Veículo:</label><input type="text" name="veiculo" required>
@@ -37,16 +32,40 @@
     <button type="submit">Cadastrar Carga</button>
   </form>
 
-  <iframe name="hiddenFrame" style="display:none;" onload="
-    const resposta = this.contentDocument?.body?.innerText;
-    if (resposta) {
-      alert('Resposta do servidor: ' + resposta);
-      console.log('Resposta recebida do Apps Script:', resposta);
-    }
-  "></iframe>
+  <div id="mensagem"></div>
 
   <div style="text-align:center; margin-top:20px;">
     <button onclick="location.href='motorista.html'">Ver como Motorista</button>
   </div>
+
+  <script>
+    const form = document.getElementById('form-carga');
+    const mensagem = document.getElementById('mensagem');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const dados = new FormData(form);
+      const params = new URLSearchParams();
+      for (const [chave, valor] of dados.entries()) {
+        params.append(chave, valor);
+      }
+
+      fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec", {
+        method: "POST",
+        body: params,
+      })
+        .then(res => res.text())
+        .then(resposta => {
+          mensagem.innerText = resposta;
+          mensagem.style.color = resposta.includes("SUCESSO") ? "green" : "red";
+          form.reset();
+        })
+        .catch(err => {
+          console.error("Erro ao enviar:", err);
+          mensagem.innerText = "❌ Erro ao enviar dados.";
+          mensagem.style.color = "red";
+        });
+    });
+  </script>
 </body>
 </html>
