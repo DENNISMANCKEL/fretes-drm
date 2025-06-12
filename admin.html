@@ -27,10 +27,11 @@
     <label>Destino:</label><input type="text" name="destino" required>
     <label>Veículo:</label><input type="text" name="veiculo" required>
     <label>Tipo:</label><input type="text" name="tipo" required>
+    <label>Peso (kg):</label><input type="text" name="peso" required>
     <label>Rastreado:</label><input type="text" name="rastreado" required>
     <label>Valor:</label><input type="text" name="valor" required>
     <label>WhatsApp:</label><input type="text" name="whatsapp" required>
-    <label>Observação:</label><textarea name="observacao"></textarea>
+    <label>Observação:</label><textarea name="observacao" required></textarea>
     <button type="submit">Cadastrar Carga</button>
   </form>
 
@@ -67,7 +68,6 @@
         .catch(err => {
           mensagem.innerText = "❌ Erro ao enviar os dados. Verifique o ID ou conexão.";
           mensagem.style.color = "red";
-          console.error("Erro:", err);
         });
     });
 
@@ -77,9 +77,7 @@
         return;
       }
 
-      const params = new URLSearchParams();
-      params.append("acao", "excluir");
-      params.append("id", id);
+      const params = new URLSearchParams({ acao: "excluir", id });
 
       fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec", {
         method: "POST",
@@ -99,25 +97,20 @@
         .then(cargas => {
           const lista = document.getElementById("lista-cargas");
           lista.innerHTML = "";
-          cargas.forEach(carga => {
+          cargas.forEach(c => {
             const li = document.createElement("li");
-            li.style.marginBottom = "15px";
             li.innerHTML = `
-              <strong>ID:</strong> ${carga.id || "sem_id"}<br>
-              <strong>${carga.origem} → ${carga.destino}</strong><br>
-              Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | Valor: ${carga.valor}<br>
-              <button onclick="removerCarga('${carga.id}')">🗑️ Remover</button>
-              <hr>
-            `;
+              <strong>ID:</strong> ${c.id}<br>
+              ${c.origem} → ${c.destino}<br>
+              Tipo: ${c.tipo} | Veículo: ${c.veiculo} | Valor: ${c.valor}<br>
+              <button onclick="removerCarga('${c.id}')">🗑️ Remover</button>
+              <hr>`;
             lista.appendChild(li);
           });
-        })
-        .catch(() => {
-          document.getElementById("lista-cargas").innerText = "Erro ao carregar cargas.";
         });
     }
 
-    window.onload = carregarCargas;
+    carregarCargas();
   </script>
 </body>
 </html>
