@@ -37,6 +37,18 @@
     button:hover {
       background-color: #1d447a;
     }
+    .btn-secondary {
+      background: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 25px;
+    }
+    .btn-secondary:hover {
+      background-color: #218838;
+    }
   </style>
 </head>
 <body>
@@ -46,6 +58,10 @@
     <input type="password" id="senha" placeholder="Senha de acesso">
     <br>
     <button onclick="acessarAdmin()">Entrar</button>
+
+    <div>
+      <a class="btn-secondary" href="motorista.html" target="_blank">📋 Ver Painel do Motorista</a>
+    </div>
   </div>
 
   <script>
