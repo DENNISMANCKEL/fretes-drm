@@ -45,15 +45,15 @@
         const whatsapp = String(c.whatsapp || "").replace(/\D/g, "");
         const msg = `Tenho interesse na carga ${origem} para ${destino} (ID: ${id})`;
         const li = document.createElement("li");
-        li.innerHTML = `
-          <strong>ID:</strong> ${id}<br>
-          <strong>${origem} → ${destino}</strong><br>
-          <strong>Veículo:</strong> ${veiculo} | <strong>Tipo:</strong> ${tipo}<br>
-          <strong>Peso:</strong> ${peso} | <strong>Rastreado:</strong> ${rastreado} | <strong>Valor:</strong> <strong>${valor}</strong><br>
-          <a class="btn" target="_blank" href="https://wa.me/55${whatsapp}?text=${encodeURIComponent(msg)}">Tenho Interesse</a>
-          <a class="btn secondary" href="documentos.html?frete_id=${id}">📎 Enviar Documentos</a>`;
-        lista.appendChild(li);
-      });
+        <li.innerHTML = `
+  <strong>ID:</strong> ${id}<br>
+  <strong>${origem} → ${destino}</strong><br>
+  <strong>Veículo:</strong> ${veiculo} | <strong>Tipo:</strong> ${tipo}<br>
+  <strong>Peso:</strong> ${peso} | <strong>Rastreado:</strong> ${rastreado} | <strong>Valor:</strong> <strong>${valor}</strong><br>
+  <strong>📝 Observação:</strong> ${c.observacao || "-"}<br><br>
+  <a class="btn" target="_blank" href="https://wa.me/55${whatsapp}?text=${encodeURIComponent(msg)}">Tenho Interesse</a>
+  <a class="btn secondary" href="documentos.html?frete_id=${id}">📎 Enviar Documentos</a>
+`;>
     });
 </script>
 </body>
