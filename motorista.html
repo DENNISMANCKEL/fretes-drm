@@ -2,86 +2,60 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Motorista - Cargas Disponíveis</title>
+  <title>Cargas Disponíveis - DRM</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f0f0;
-      padding: 20px;
-    }
-    section {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      margin: 20px auto;
-      max-width: 800px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h2 {
-      color: #2a5d9f;
-    }
+    body { font-family: Arial; padding: 20px; background: #f7f7f7; }
+    ul { list-style: none; padding: 0; }
+    li { background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.1); }
     .btn {
-      background: #2a5d9f;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-      display: inline-block;
-      text-decoration: none;
+      background: #2a5d9f; color: white; padding: 8px 12px;
+      border: none; border-radius: 5px; text-decoration: none;
+      display: inline-block; margin-top: 8px; font-weight: bold;
     }
-    ul {
-      padding-left: 0;
-      list-style: none;
-    }
-    li {
-      margin-bottom: 25px;
-    }
+    .btn.secondary { background: #28a745; margin-left: 10px; }
   </style>
 </head>
 <body>
-  <section>
-    <h2>Cargas em Oferta</h2>
-    <ul id="lista-cargas">Carregando cargas...</ul>
-  </section>
+<h2>Cargas Disponíveis</h2>
+<ul id="lista-cargas">Carregando...</ul>
 
-  <script>
-  fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec")
+<script>
+  const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec";
+
+  function formatarValor(valor) {
+    try {
+      const num = parseFloat(valor.replace("R$", "").replace(",", ".").replace(/\./g, "")) / 100;
+      return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    } catch {
+      return valor;
+    }
+  }
+
+  fetch(URL_SCRIPT)
     .then(res => res.json())
     .then(cargas => {
       const lista = document.getElementById("lista-cargas");
       lista.innerHTML = "";
-
-      if (!Array.isArray(cargas)) {
-        throw new Error("Resposta inesperada do servidor");
-      }
-
-      cargas.forEach(carga => {
-        const origem = carga.origem || "Origem não informada";
-        const destino = carga.destino || "Destino não informado";
-        const tipo = carga.tipo || "-";
-        const veiculo = carga.veiculo || "-";
-        const valor = carga.valor || "-";
-        const whatsapp = String(carga.whatsapp || "").replace(/\D/g, "");
-        const id = carga.id || "-";
-
+      cargas.forEach(c => {
+        const id = c.id || "sem_id";
+        const origem = c.origem || "";
+        const destino = c.destino || "";
+        const tipo = c.tipo || "";
+        const veiculo = c.veiculo || "";
+        const rastreado = c.rastreado || "";
+        const valor = formatarValor(c.valor || "");
+        const whatsapp = String(c.whatsapp || "").replace(/\D/g, "");
+        const msg = `Tenho interesse na carga ${origem} para ${destino} (ID: ${id})`;
         const li = document.createElement("li");
         li.innerHTML = `
-          <strong>ID: ${id}</strong><br>
+          <strong>ID:</strong> ${id}<br>
           <strong>${origem} → ${destino}</strong><br>
-          Tipo: ${tipo} | Veículo: ${veiculo} | Valor: R$ ${valor}<br>
-          <a href="https://wa.me/55${whatsapp}?text=Tenho%20interesse%20na%20carga%20${origem}%20para%20${destino}%20(ID%3A%20${id})" target="_blank" class="btn">Tenho Interesse</a>
-          <a href="https://dennismanckel.github.io/fretes-drm/documentos.html?frete_id=${id}" target="_blank" class="btn">Enviar Documentos</a>
-          <hr>
-        `;
+          <strong>Veículo:</strong> ${veiculo} | <strong>Tipo:</strong> ${tipo}<br>
+          <strong>Rastreado:</strong> ${rastreado} | <strong>Valor:</strong> ${valor}<br>
+          <a class="btn" target="_blank" href="https://wa.me/55${whatsapp}?text=${encodeURIComponent(msg)}">Tenho Interesse</a>
+          <a class="btn secondary" href="documentos.html?frete_id=${id}">📎 Enviar Documentos</a>`;
         lista.appendChild(li);
       });
-    })
-    .catch(err => {
-      const lista = document.getElementById("lista-cargas");
-      lista.innerHTML = "❌ Erro ao carregar cargas.";
-      console.error("Erro ao buscar cargas:", err);
     });
 </script>
 </body>
