@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Administração de Cargas - DRM</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; }
+    h1, h2 { text-align: center; color: #2a5d9f; }
+    form { background: white; padding: 20px; border-radius: 8px; margin: 0 auto 30px; max-width: 800px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    label, input, textarea { display: block; width: 100%; margin-top: 10px; }
+    input, textarea { padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+    button {
+      background: #2a5d9f; color: white; padding: 10px 20px; font-size: 16px;
+      border: none; border-radius: 5px; margin-top: 15px; cursor: pointer;
+    }
+    button:hover { background-color: #1d447a; }
+    #mensagem { text-align: center; margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Painel Administrativo - Cadastrar Nova Carga</h1>
+
+  <form id="form-carga">
+    <label>Origem:</label><input type="text" name="origem" required>
+    <label>Destino:</label><input type="text" name="destino" required>
+    <label>Veículo:</label><input type="text" name="veiculo" required>
+    <label>Tipo:</label><input type="text" name="tipo" required>
+    <label>Rastreado:</label><input type="text" name="rastreado" required>
+    <label>Valor:</label><input type="text" name="valor" required>
+    <label>WhatsApp:</label><input type="text" name="whatsapp" required>
+    <label>Observação:</label><textarea name="observacao"></textarea>
+    <button type="submit">Cadastrar Carga</button>
+  </form>
+
+  <div id="mensagem"></div>
+
+  <h2>Cargas Atuais</h2>
+  <ul id="lista-cargas" style="list-style:none; padding:0;"></ul>
+
+  <script>
+    const form = document.getElementById('form-carga');
+    const mensagem = document.getElementById('mensagem');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const dados = new FormData(form);
+      const params = new URLSearchParams();
+      for (const [chave, valor] of dados.entries()) {
+        params.append(chave, valor);
+      }
+
+      fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec", {
+        method: "POST",
+        body: params,
+      })
+        .then(res => res.text())
+        .then(resposta => {
+          mensagem.innerText = resposta;
+          mensagem.style.color = resposta.includes("SUCESSO") ? "green" : "red";
+          form.reset();
+          carregarCargas();
+        })
+        .catch(err => {
+          console.error("Erro ao enviar:", err);
+          mensagem.innerText = "❌ Erro ao enviar dados.";
+          mensagem.style.color = "red";
+        });
+    });
+
+    function carregarCargas() {
+      fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec")
+        .then(res => res.json())
+        .then(cargas => {
+          const lista = document.getElementById("lista-cargas");
+          lista.innerHTML = "";
+          cargas.forEach(carga => {
+            const li = document.createElement("li");
+            li.style.marginBottom = "15px";
+            li.innerHTML = `
+              <strong>ID:</strong> ${carga.id}<br>
+              <strong>${carga.origem} → ${carga.destino}</strong><br>
+              Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | Valor: R$ ${carga.valor}<br>
+              <button onclick="removerCarga('${carga.id}')">🗑️ Remover</button>
+              <hr>
+            `;
+            lista.appendChild(li);
+          });
+        });
+    }
+
+    function removerCarga(id) {
+      if (confirm("Tem certeza que deseja remover esta carga?")) {
+        fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec?id=" + id, {
+          method: "DELETE"
+        })
+          .then(res => res.text())
+          .then(msg => {
+            alert(msg);
+            carregarCargas();
+          })
+          .catch(() => alert("Erro ao tentar remover carga."));
+      }
+    }
+
+    window.onload = carregarCargas;
+  </script>
+</body>
+</html>
