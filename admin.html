@@ -21,7 +21,8 @@
   <h1>Painel Administrativo - Cadastrar Nova Carga</h1>
 
   <form id="form-carga">
-    <label>ID da Carga (defina manualmente):</label><input type="text" name="id" required>
+    <label>ID da Carga (defina manualmente):</label>
+    <input type="text" name="id" required>
     <label>Origem:</label><input type="text" name="origem" required>
     <label>Destino:</label><input type="text" name="destino" required>
     <label>Veículo:</label><input type="text" name="veiculo" required>
@@ -58,15 +59,39 @@
         .then(resposta => {
           mensagem.innerText = resposta;
           mensagem.style.color = resposta.includes("SUCESSO") ? "green" : "red";
-          form.reset();
-          carregarCargas();
+          if (resposta.includes("SUCESSO")) {
+            form.reset();
+            carregarCargas();
+          }
         })
         .catch(err => {
-          console.error("Erro ao enviar:", err);
-          mensagem.innerText = "❌ Erro ao enviar dados.";
+          mensagem.innerText = "❌ Erro ao enviar os dados. Verifique o ID ou conexão.";
           mensagem.style.color = "red";
+          console.error("Erro:", err);
         });
     });
+
+    function removerCarga(id) {
+      if (!id || id === "undefined") {
+        alert("❌ Esta carga não tem ID válido e não pode ser removida.");
+        return;
+      }
+
+      const params = new URLSearchParams();
+      params.append("acao", "excluir");
+      params.append("id", id);
+
+      fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec", {
+        method: "POST",
+        body: params
+      })
+        .then(res => res.text())
+        .then(msg => {
+          alert(msg);
+          carregarCargas();
+        })
+        .catch(() => alert("Erro ao tentar remover carga."));
+    }
 
     function carregarCargas() {
       fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec")
@@ -78,29 +103,18 @@
             const li = document.createElement("li");
             li.style.marginBottom = "15px";
             li.innerHTML = `
-              <strong>ID:</strong> ${carga.id}<br>
+              <strong>ID:</strong> ${carga.id || "sem_id"}<br>
               <strong>${carga.origem} → ${carga.destino}</strong><br>
-              Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | Valor: R$ ${carga.valor}<br>
+              Tipo: ${carga.tipo} | Veículo: ${carga.veiculo} | Valor: ${carga.valor}<br>
               <button onclick="removerCarga('${carga.id}')">🗑️ Remover</button>
               <hr>
             `;
             lista.appendChild(li);
           });
-        });
-    }
-
-    function removerCarga(id) {
-      if (confirm("Tem certeza que deseja remover esta carga?")) {
-        fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec?id=" + id, {
-          method: "DELETE"
         })
-          .then(res => res.text())
-          .then(msg => {
-            alert(msg);
-            carregarCargas();
-          })
-          .catch(() => alert("Erro ao tentar remover carga."));
-      }
+        .catch(() => {
+          document.getElementById("lista-cargas").innerText = "Erro ao carregar cargas.";
+        });
     }
 
     window.onload = carregarCargas;
