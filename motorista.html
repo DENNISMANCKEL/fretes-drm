@@ -23,12 +23,9 @@
   const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec";
 
   function formatarValor(valor) {
-    try {
-      const num = parseFloat(valor.replace("R$", "").replace(",", ".").replace(/\./g, "")) / 100;
-      return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    } catch {
-      return valor;
-    }
+    const num = parseFloat(String(valor).replace(/[R$\s.]/g, "").replace(",", "."));
+    if (isNaN(num)) return valor;
+    return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 
   fetch(URL_SCRIPT)
@@ -42,6 +39,7 @@
         const destino = c.destino || "";
         const tipo = c.tipo || "";
         const veiculo = c.veiculo || "";
+        const peso = c.peso || "-";
         const rastreado = c.rastreado || "";
         const valor = formatarValor(c.valor || "");
         const whatsapp = String(c.whatsapp || "").replace(/\D/g, "");
@@ -51,7 +49,7 @@
           <strong>ID:</strong> ${id}<br>
           <strong>${origem} → ${destino}</strong><br>
           <strong>Veículo:</strong> ${veiculo} | <strong>Tipo:</strong> ${tipo}<br>
-          <strong>Rastreado:</strong> ${rastreado} | <strong>Valor:</strong> ${valor}<br>
+          <strong>Peso:</strong> ${peso} | <strong>Rastreado:</strong> ${rastreado} | <strong>Valor:</strong> <strong>${valor}</strong><br>
           <a class="btn" target="_blank" href="https://wa.me/55${whatsapp}?text=${encodeURIComponent(msg)}">Tenho Interesse</a>
           <a class="btn secondary" href="documentos.html?frete_id=${id}">📎 Enviar Documentos</a>`;
         lista.appendChild(li);
