@@ -3,83 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Divulga Fretes DRM</title>
+  <title>Painel Administrativo - DRM</title>
   <style>
-    body {
+    body, html {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Arial', sans-serif;
       background: black;
+      font-family: Arial, sans-serif;
       display: flex;
-      flex-direction: column;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       min-height: 100vh;
     }
+
     .container {
-      background: white;
-      padding: 40px 30px;
+      background: #fff;
+      width: 95%;
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 30px 20px;
       border-radius: 15px;
-      width: 90%;
-      max-width: 600px;
-      text-align: center;
       box-sizing: border-box;
     }
+
     .logo {
-      max-width: 300px;
-      margin-bottom: 25px;
-    }
-    .btn {
       display: block;
-      width: 80%;
-      max-width: 300px;
-      margin: 15px auto;
-      padding: 15px;
+      margin: 0 auto 20px auto;
+      max-width: 80%;
+      height: auto;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
       font-size: 16px;
-      font-weight: bold;
+      box-sizing: border-box;
+    }
+
+    button, .btn {
+      width: 100%;
+      background: #0050c8;
       color: white;
-      background-color: #0050c8;
+      font-weight: bold;
       border: none;
       border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    .btn:hover {
-      background-color: #003e99;
-    }
-    #campoSenha {
-      margin-top: 20px;
-    }
-    #senha {
-      padding: 10px;
-      width: 80%;
-      max-width: 250px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    .frase-impacto {
-      margin-top: 25px;
-      color: white;
+      padding: 14px;
+      margin-top: 12px;
       font-size: 16px;
-      font-weight: bold;
-      text-align: center;
-      padding: 0 15px;
-      box-sizing: border-box;
+      cursor: pointer;
     }
-    @media screen and (max-width: 480px) {
+
+    button:hover, .btn:hover {
+      background: #003e99;
+    }
+
+    .btn.green {
+      background: #28a745;
+    }
+
+    .btn.green:hover {
+      background: #1e7e34;
+    }
+
+    .btn.red {
+      background: #dc3545;
+    }
+
+    .btn.red:hover {
+      background: #c82333;
+    }
+
+    .carga-card {
+      background: #f1f1f1;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    label {
+      text-align: left;
+      display: block;
+      margin: 5px 0 0 2px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    @media screen and (max-width: 400px) {
       .container {
-        padding: 25px 15px;
+        padding: 20px 15px;
       }
-      .btn {
+      input, select, textarea, button {
         font-size: 15px;
-        padding: 12px;
-      }
-      #senha {
-        font-size: 15px;
-      }
-      .frase-impacto {
-        font-size: 14px;
       }
     }
   </style>
@@ -87,33 +106,123 @@
 <body>
   <div class="container">
     <img src="logo.png" alt="Divulga Fretes DRM" class="logo">
-    <button class="btn" onclick="window.location.href='motorista.html'">📋 CARGAS DISPONÍVEIS</button>
-    <button class="btn" onclick="mostrarCampoSenha()">🔐 ÁREA ADMINISTRATIVA</button>
+    <h2>Cadastro de Carga</h2>
 
-    <div id="campoSenha" style="display: none;">
-      <input type="password" id="senha" placeholder="Digite a senha">
-      <br>
-      <button class="btn" style="background:#28a745;" onclick="acessarAdmin()">ENTRAR</button>
-    </div>
-  </div>
+    <input type="text" id="id" placeholder="ID da carga (ex: 123456)">
+    <input type="text" id="origem" placeholder="Origem">
+    <input type="text" id="destino" placeholder="Destino">
+    <input type="text" id="veiculo" placeholder="Tipo de Veículo">
+    <input type="text" id="tipo" placeholder="Tipo de Carga">
+    <input type="text" id="peso" placeholder="Peso (ex: 25 Ton)">
+    <select id="rastreado">
+      <option value="">Rastreado?</option>
+      <option value="SIM">SIM</option>
+      <option value="NÃO">NÃO</option>
+    </select>
+    <input type="text" id="valor" placeholder="Valor (ex: 5000)">
+    <input type="text" id="whatsapp" placeholder="WhatsApp (apenas números)">
+    <textarea id="observacao" placeholder="Observações"></textarea>
 
-  <div class="frase-impacto">
-    "O frete certo, no momento certo, com o motorista ideal."
+    <button onclick="cadastrarCarga()">Cadastrar Carga</button>
+    <p id="mensagem" style="text-align: center; margin-top: 10px;"></p>
+
+    <h2 style="text-align:center;">Cargas Atuais</h2>
+    <div id="lista" style="margin-top: 20px;"></div>
   </div>
 
   <script>
-    function mostrarCampoSenha() {
-      document.getElementById("campoSenha").style.display = "block";
+    const url = "https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec";
+
+    function cadastrarCarga() {
+      const dados = {
+        id: document.getElementById("id").value,
+        origem: document.getElementById("origem").value,
+        destino: document.getElementById("destino").value,
+        veiculo: document.getElementById("veiculo").value,
+        tipo: document.getElementById("tipo").value,
+        peso: document.getElementById("peso").value,
+        rastreado: document.getElementById("rastreado").value,
+        valor: document.getElementById("valor").value,
+        whatsapp: document.getElementById("whatsapp").value,
+        observacao: document.getElementById("observacao").value
+      };
+
+      const form = new URLSearchParams(dados);
+
+      fetch(url, {
+        method: "POST",
+        body: form
+      })
+      .then(res => res.text())
+      .then(msg => {
+        document.getElementById("mensagem").textContent = msg;
+        limparFormulario();
+        carregarCargas();
+      })
+      .catch(() => {
+        document.getElementById("mensagem").textContent = "❌ Erro ao enviar dados.";
+      });
     }
 
-    function acessarAdmin() {
-      const senha = document.getElementById("senha").value;
-      if (senha === "DRM250317@@!") {
-        window.location.href = "admin.html";
-      } else {
-        alert("Senha incorreta!");
-      }
+    function limparFormulario() {
+      document.getElementById("id").value = "";
+      document.getElementById("origem").value = "";
+      document.getElementById("destino").value = "";
+      document.getElementById("veiculo").value = "";
+      document.getElementById("tipo").value = "";
+      document.getElementById("peso").value = "";
+      document.getElementById("rastreado").value = "";
+      document.getElementById("valor").value = "";
+      document.getElementById("whatsapp").value = "";
+      document.getElementById("observacao").value = "";
     }
+
+    function removerCarga(id) {
+      const form = new URLSearchParams();
+      form.append("acao", "excluir");
+      form.append("id", id);
+
+      fetch(url, {
+        method: "POST",
+        body: form
+      })
+      .then(res => res.text())
+      .then(msg => {
+        alert(msg);
+        carregarCargas();
+      })
+      .catch(() => alert("Erro ao deletar carga."));
+    }
+
+    function carregarCargas() {
+      fetch(url)
+        .then(res => res.json())
+        .then(dados => {
+          const lista = document.getElementById("lista");
+          lista.innerHTML = "";
+          if (!Array.isArray(dados) || dados.length === 0) {
+            lista.innerHTML = "<p style='text-align:center;'>Nenhuma carga cadastrada.</p>";
+            return;
+          }
+
+          dados.forEach(c => {
+            const div = document.createElement("div");
+            div.className = "carga-card";
+            div.innerHTML = `
+              <strong>ID:</strong> ${c.id}<br>
+              ${c.origem} → ${c.destino}<br>
+              Tipo: ${c.tipo} | Veículo: ${c.veiculo} | Valor: R$ ${c.valor}<br>
+              <button class="btn red" onclick="removerCarga('${c.id}')">🗑️ Remover</button>
+            `;
+            lista.appendChild(div);
+          });
+        })
+        .catch(() => {
+          document.getElementById("lista").innerHTML = "<p style='text-align:center;'>Erro ao carregar cargas.</p>";
+        });
+    }
+
+    carregarCargas();
   </script>
 </body>
 </html>
