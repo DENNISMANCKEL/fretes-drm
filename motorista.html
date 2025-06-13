@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cargas Disponíveis - DRM</title>
   <style>
     body {
@@ -58,9 +59,20 @@
       border-radius: 10px;
       box-shadow: 0 0 8px rgba(0,0,0,0.1);
       text-align: left;
+      font-size: 15px;
     }
     .frete-card strong {
       color: #000;
+    }
+    @media screen and (max-width: 480px) {
+      .btn {
+        font-size: 15px;
+        padding: 12px;
+      }
+      .frete-card {
+        font-size: 14px;
+        padding: 12px;
+      }
     }
   </style>
 </head>
