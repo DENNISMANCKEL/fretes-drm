@@ -16,7 +16,6 @@
       box-sizing: border-box;
       overflow-x: hidden;
     }
-
     .container {
       background: #fff;
       width: 95%;
@@ -26,14 +25,12 @@
       border-radius: 15px;
       box-sizing: border-box;
     }
-
     .logo {
       display: block;
       margin: 0 auto 20px auto;
       max-width: 80%;
       height: auto;
     }
-
     input, select, textarea {
       width: 100%;
       padding: 12px;
@@ -43,7 +40,6 @@
       font-size: 16px;
       box-sizing: border-box;
     }
-
     button, .btn {
       width: 100%;
       background: #0050c8;
@@ -56,19 +52,15 @@
       font-size: 16px;
       cursor: pointer;
     }
-
     .btn:hover, button:hover {
       background: #003e99;
     }
-
     .btn.red {
-      background: #dc3545;
+      background-color: #dc3545;
     }
-
     .btn.red:hover {
-      background: #a71d2a;
+      background-color: #a71d2a;
     }
-
     label {
       text-align: left;
       display: block;
@@ -76,21 +68,11 @@
       font-weight: bold;
       font-size: 15px;
     }
-
     .carga-card {
       background: #f8f9fa;
       padding: 15px;
       border-radius: 10px;
       margin-top: 15px;
-    }
-
-    @media screen and (max-width: 400px) {
-      .container {
-        padding: 20px 15px;
-      }
-      input, select, textarea, button {
-        font-size: 15px;
-      }
     }
   </style>
 </head>
@@ -148,13 +130,18 @@
           document.getElementById("mensagem").textContent = msg;
           carregarCargas();
         })
-        .catch(err => {
+        .catch(() => {
           document.getElementById("mensagem").textContent = "❌ Erro ao enviar dados.";
         });
     }
 
     function removerCarga(id) {
-      fetch(`${url}?id=${id}`, { method: "DELETE" })
+      const form = new URLSearchParams({ acao: "deletar", id });
+
+      fetch(url, {
+        method: "POST",
+        body: form
+      })
         .then(res => res.text())
         .then(msg => {
           alert(msg);
