@@ -4,41 +4,78 @@
   <meta charset="UTF-8">
   <title>Cargas Disponíveis - DRM</title>
   <style>
-    body { font-family: Arial; padding: 20px; background: #f7f7f7; }
-    ul { list-style: none; padding: 0; }
-    li {
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
       background: white;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      padding: 30px 20px;
+      border-radius: 15px;
+      width: 95%;
+      max-width: 600px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .logo {
+      max-width: 280px;
+      margin-bottom: 25px;
     }
     .btn {
-      background: #2a5d9f;
-      color: white;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 5px;
-      text-decoration: none;
-      display: inline-block;
-      margin-top: 8px;
+      display: block;
+      width: 90%;
+      margin: 10px auto;
+      padding: 14px;
+      font-size: 16px;
       font-weight: bold;
+      color: white;
+      background-color: #0050c8;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      text-decoration: none;
     }
-    .btn.secondary {
-      background: #28a745;
-      margin-left: 10px;
+    .btn:hover {
+      background-color: #003e99;
+    }
+    .btn.green {
+      background-color: #28a745;
+    }
+    .btn.green:hover {
+      background-color: #1e7e34;
+    }
+    .frete-card {
+      background: #ffffff;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+    .frete-card strong {
+      color: #000;
     }
   </style>
 </head>
 <body>
-  <h2>Cargas Disponíveis</h2>
-  <ul id="lista-cargas">Carregando...</ul>
+  <div class="container">
+    <img src="logo.png" alt="Divulga Fretes DRM" class="logo">
+    <h2 style="margin-bottom: 20px;">Cargas Disponíveis</h2>
+    <div id="lista-cargas">Carregando...</div>
+  </div>
 
   <script>
     const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec";
 
     function formatarValor(valor) {
-      const num = parseFloat(String(valor).replace(/[R$\\s.]/g, "").replace(",", "."));
+      const num = parseFloat(String(valor).replace(/[R$\s.]/g, "").replace(",", "."));
       if (isNaN(num)) return valor;
       return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
@@ -57,21 +94,22 @@
           const peso = c.peso || "-";
           const rastreado = c.rastreado || "";
           const valor = formatarValor(c.valor || "");
-          const whatsapp = String(c.whatsapp || "").replace(/\\D/g, "");
+          const whatsapp = String(c.whatsapp || "").replace(/\D/g, "");
           const observacao = c.observacao || "-";
           const msg = `Tenho interesse na carga ${origem} para ${destino} (ID: ${id})`;
 
-          const li = document.createElement("li");
-          li.innerHTML = `
+          const div = document.createElement("div");
+          div.className = "frete-card";
+          div.innerHTML = `
             <strong>ID:</strong> ${id}<br>
             <strong>${origem} → ${destino}</strong><br>
             <strong>Veículo:</strong> ${veiculo} | <strong>Tipo:</strong> ${tipo}<br>
             <strong>Peso:</strong> ${peso} | <strong>Rastreado:</strong> ${rastreado} | <strong>Valor:</strong> <strong>${valor}</strong><br>
             <strong>📝 Observação:</strong> ${observacao}<br><br>
             <a class="btn" target="_blank" href="https://wa.me/55${whatsapp}?text=${encodeURIComponent(msg)}">Tenho Interesse</a>
-            <a class="btn secondary" href="documentos.html?frete_id=${id}">📎 Enviar Documentos</a>
+            <a class="btn green" href="documentos.html?frete_id=${id}">📎 Enviar Documentos</a>
           `;
-          lista.appendChild(li);
+          lista.appendChild(div);
         });
       });
   </script>
