@@ -1,91 +1,105 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Administração de Cargas - DRM</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Administrativo - DRM</title>
   <style>
-    body {
-      background-color: black;
-      font-family: Arial, sans-serif;
-      color: #000;
+    body, html {
+      box-sizing: border-box;
+      overflow-x: hidden;
       margin: 0;
       padding: 0;
+      background: black;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
     }
 
     .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      margin-top: 20px;
-    }
-
-    h2 {
-      text-align: center;
-      color: #000;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 6px 0;
+      background: #fff;
+      width: 95%;
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 30px 20px;
+      border-radius: 15px;
       box-sizing: border-box;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    .btn {
-      display: inline-block;
-      background-color: #0055cc;
-      color: white;
-      padding: 10px;
-      width: 100%;
-      border: none;
-      border-radius: 6px;
-      margin: 10px 0;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .btn-delete {
-      background-color: #d93025;
-    }
-
-    .frete {
-      background: #f9f9f9;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 10px;
-      margin-bottom: 12px;
     }
 
     .logo {
       display: block;
-      margin: 0 auto 10px auto;
-      max-width: 180px;
+      margin: 0 auto 20px auto;
+      max-width: 80%;
+      height: auto;
     }
 
-    .success {
-      color: green;
-      text-align: center;
-      font-weight: bold;
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      box-sizing: border-box;
     }
 
-    .error {
-      color: red;
-      text-align: center;
+    button, .btn {
+      width: 100%;
+      background: #0050c8;
+      color: white;
       font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 12px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover, .btn:hover {
+      background: #003e99;
+    }
+
+    .btn.green {
+      background: #28a745;
+    }
+
+    .btn.green:hover {
+      background: #1e7e34;
+    }
+
+    label {
+      text-align: left;
+      display: block;
+      margin: 5px 0 0 2px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .carga-card {
+      background: #f1f1f1;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+
+    @media screen and (max-width: 400px) {
+      .container {
+        padding: 20px 15px;
+      }
+      input, select, textarea, button {
+        font-size: 15px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img src="logo.png" alt="Logo Divulga Fretes DRM" class="logo">
+    <img src="logo.png" alt="Divulga Fretes DRM" class="logo">
     <h2>Cadastro de Carga</h2>
 
-    <input type="text" id="id" placeholder="ID da carga">
+    <input type="text" id="id" placeholder="ID da carga (ex: 123456)">
     <input type="text" id="origem" placeholder="Origem">
     <input type="text" id="destino" placeholder="Destino">
     <input type="text" id="veiculo" placeholder="Tipo de Veículo">
@@ -100,88 +114,93 @@
     <input type="text" id="whatsapp" placeholder="WhatsApp (apenas números)">
     <textarea id="observacao" placeholder="Observações"></textarea>
 
-    <button class="btn" onclick="cadastrarCarga()">Cadastrar Carga</button>
-    <p id="mensagem"></p>
+    <button onclick="cadastrarCarga()">Cadastrar Carga</button>
+    <p id="mensagem" style="text-align: center; margin-top: 10px;"></p>
 
-    <h2>Cargas Atuais</h2>
-    <div id="listaCargas"></div>
+    <h2 style="text-align:center;">Cargas Atuais</h2>
+    <div id="lista" style="margin-top: 20px;"></div>
   </div>
 
   <script>
     const url = "https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec";
 
-    async function cadastrarCarga() {
+    function cadastrarCarga() {
       const dados = {
-        id: document.getElementById("id").value.trim(),
-        origem: document.getElementById("origem").value.trim(),
-        destino: document.getElementById("destino").value.trim(),
-        veiculo: document.getElementById("veiculo").value.trim(),
-        tipo: document.getElementById("tipo").value.trim(),
-        peso: document.getElementById("peso").value.trim(),
-        rastreado: document.getElementById("rastreado").value.trim(),
-        valor: document.getElementById("valor").value.trim(),
-        whatsapp: document.getElementById("whatsapp").value.trim(),
-        observacao: document.getElementById("observacao").value.trim()
+        id: document.getElementById("id").value,
+        origem: document.getElementById("origem").value,
+        destino: document.getElementById("destino").value,
+        veiculo: document.getElementById("veiculo").value,
+        tipo: document.getElementById("tipo").value,
+        peso: document.getElementById("peso").value,
+        rastreado: document.getElementById("rastreado").value,
+        valor: document.getElementById("valor").value,
+        whatsapp: document.getElementById("whatsapp").value,
+        observacao: document.getElementById("observacao").value
       };
 
-      const params = new URLSearchParams(dados);
+      const form = new URLSearchParams(dados);
 
-      try {
-        const resposta = await fetch(url, {
-          method: "POST",
-          body: params
-        });
-        const texto = await resposta.text();
-        document.getElementById("mensagem").innerHTML = texto.includes("SUCESSO") ?
-          `<span class="success">${texto}</span>` :
-          `<span class="error">${texto}</span>`;
+      fetch(url, {
+        method: "POST",
+        body: form
+      })
+      .then(res => res.text())
+      .then(msg => {
+        document.getElementById("mensagem").textContent = msg;
         carregarCargas();
-      } catch (error) {
-        document.getElementById("mensagem").innerHTML = `<span class="error">❌ Erro ao enviar dados.</span>`;
-      }
+      })
+      .catch(() => {
+        document.getElementById("mensagem").textContent = "❌ Erro ao enviar dados.";
+      });
     }
 
-    async function carregarCargas() {
-      try {
-        const resposta = await fetch(url);
-        const cargas = await resposta.json();
-        const lista = document.getElementById("listaCargas");
-        lista.innerHTML = "";
-        cargas.forEach(carga => {
-          const div = document.createElement("div");
-          div.className = "frete";
-          div.innerHTML = `
-            <strong>ID:</strong> ${carga.id}<br>
-            <strong>${carga.origem} → ${carga.destino}</strong><br>
-            Tipo: ${carga.tipo} | Veículo: ${carga.veiculo}<br>
-            <strong>Valor:</strong> ${carga.valor}<br>
-            <button class="btn btn-delete" onclick="removerCarga('${carga.id}')">🗑️ Remover</button>
-          `;
-          lista.appendChild(div);
+    function removerCarga(id) {
+      const form = new URLSearchParams();
+      form.append("acao", "excluir");
+      form.append("id", id);
+
+      fetch(url, {
+        method: "POST",
+        body: form
+      })
+      .then(res => res.text())
+      .then(msg => {
+        alert(msg);
+        carregarCargas();
+      })
+      .catch(() => alert("Erro ao deletar carga."));
+    }
+
+    function carregarCargas() {
+      fetch(url)
+        .then(res => res.json())
+        .then(dados => {
+          const lista = document.getElementById("lista");
+          lista.innerHTML = "";
+          if (!Array.isArray(dados) || dados.length === 0) {
+            lista.innerHTML = "<p style='text-align:center;'>Nenhuma carga cadastrada.</p>";
+            return;
+          }
+
+          dados.forEach(c => {
+            const div = document.createElement("div");
+            div.className = "carga-card";
+            div.innerHTML = `
+              <strong>ID:</strong> ${c.id}<br>
+              ${c.origem} → ${c.destino}<br>
+              Tipo: ${c.tipo} | Veículo: ${c.veiculo} | Valor: R$ ${c.valor}<br>
+              <button onclick="removerCarga('${c.id}')">🗑️ Remover</button>
+            `;
+            lista.appendChild(div);
+          });
+        })
+        .catch(() => {
+          document.getElementById("lista").innerHTML = "<p style='text-align:center;'>Erro ao carregar cargas.</p>";
         });
-      } catch (error) {
-        console.error("Erro ao carregar cargas:", error);
-      }
     }
 
-  function removerCarga(id) {
-  const form = new URLSearchParams();
-  form.append("acao", "excluir");
-  form.append("id", id);
-
-  fetch(url, {
-    method: "POST",
-    body: form
-  })
-  .then(res => res.text())
-  .then(msg => {
-    alert(msg);
+    // Carrega assim que abre
     carregarCargas();
-  })
-  .catch(err => alert("Erro ao deletar carga"));
-}
-}
-    window.onload = carregarCargas;
   </script>
 </body>
 </html>
