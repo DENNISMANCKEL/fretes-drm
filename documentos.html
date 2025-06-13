@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <title>Envio de Documentos - DRM</title>
+  <meta charset="UTF-8">
+  <title>Envio de Documentos</title>
   <style>
     body {
       margin: 0;
@@ -10,6 +10,7 @@
       font-family: 'Arial', sans-serif;
       background: black;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
@@ -19,44 +20,37 @@
       padding: 40px 30px;
       border-radius: 15px;
       width: 90%;
-      max-width: 600px;
+      max-width: 700px;
       text-align: left;
-      box-sizing: border-box;
     }
     h2 {
-      color: #2a5d9f;
       text-align: center;
+      color: #0050c8;
       margin-bottom: 25px;
     }
     label {
       font-weight: bold;
       display: block;
       margin-top: 15px;
-      color: #333;
     }
-    input[type="text"], input[type="file"], textarea {
+    input, select, textarea {
       width: 100%;
-      padding: 12px;
-      margin-top: 5px;
+      padding: 10px;
       border: 1px solid #ccc;
-      border-radius: 8px;
-      box-sizing: border-box;
-      font-size: 14px;
-      resize: vertical;
+      border-radius: 5px;
+      margin-top: 5px;
     }
     button {
-      display: block;
-      width: 100%;
-      margin-top: 25px;
-      padding: 15px;
-      font-size: 16px;
-      font-weight: bold;
-      color: white;
       background-color: #0050c8;
+      color: white;
+      padding: 15px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      width: 100%;
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: bold;
     }
     button:hover {
       background-color: #003e99;
@@ -67,43 +61,70 @@
   <div class="container">
     <h2>Envio de Documentos do Motorista</h2>
     <form action="https://formsubmit.co/programacao03@agilixlogistica.com.br" method="POST" enctype="multipart/form-data">
-      <input type="hidden" name="frete_id" id="frete_id" />
+      <label for="tipo_veiculo">Tipo de Veículo:</label>
+      <select id="tipo_veiculo" name="tipo_veiculo" required onchange="verificaTipoVeiculo()">
+        <option value="">Selecione</option>
+        <option value="Truck">Truck</option>
+        <option value="Cavalo+Carreta">Cavalo + Carreta</option>
+      </select>
 
-      <label>CNH do Motorista:</label>
-      <input type="file" name="cnh" required />
+      <label for="nome">Nome do Motorista:</label>
+      <input type="text" name="nome" id="nome" required>
 
-      <label>ANTT:</label>
-      <input type="file" name="antt" required />
+      <label for="telefone">Telefone do Motorista:</label>
+      <input type="text" name="telefone" id="telefone" required>
 
-      <label>CRLV do Cavalo/Truck:</label>
-      <input type="file" name="crlv_cavalo" required />
+      <label for="cnh">CNH do Motorista:</label>
+      <input type="file" name="cnh" id="cnh" required>
 
-      <label>CRLV da Carreta:</label>
-      <input type="file" name="crlv_carreta" required />
+      <label for="crlv_cavalo">CRLV do Truck/Cavalo:</label>
+      <input type="file" name="crlv_cavalo" id="crlv_cavalo" required>
 
-      <label>Comprovante de Endereço:</label>
-      <input type="file" name="endereco" required />
+      <div id="carretaSection">
+        <label for="crlv_carreta">CRLV da Carreta:</label>
+        <input type="file" name="crlv_carreta" id="crlv_carreta">
+      </div>
 
-      <label>Referências Pessoais:</label>
-      <textarea name="ref_pessoais" required rows="3"></textarea>
+      <label for="antt">ANTT do Proprietário:</label>
+      <input type="file" name="antt" id="antt" required>
 
-      <label>Referências Comerciais:</label>
-      <textarea name="ref_comerciais" required rows="3"></textarea>
+      <label for="rastreador">Dados do Rastreador:</label>
+      <input type="file" name="rastreador" id="rastreador" required>
 
-      <label>Telefone do Motorista:</label>
-      <input type="text" name="telefone" required />
+      <label for="endereco">Comprovante de Endereço:</label>
+      <input type="file" name="endereco" id="endereco" required>
 
-      <label>Observações:</label>
-      <textarea name="observacoes" rows="3"></textarea>
+      <label for="tag">TAG de Pedágio:</label>
+      <input type="file" name="tag" id="tag" required>
+
+      <label for="pix">Dados do PIX do Proprietário:</label>
+      <input type="file" name="pix" id="pix" required>
+
+      <label for="ref_comerciais">Contatos Comerciais:</label>
+      <textarea name="ref_comerciais" id="ref_comerciais" required></textarea>
+
+      <label for="ref_pessoais">Contatos Pessoais:</label>
+      <textarea name="ref_pessoais" id="ref_pessoais" required></textarea>
+
+      <label for="observacoes">Observações:</label>
+      <textarea name="observacoes" id="observacoes"></textarea>
 
       <button type="submit">Enviar Documentos</button>
     </form>
   </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const freteId = urlParams.get('frete_id') || '';
-    document.getElementById('frete_id').value = freteId;
+    function verificaTipoVeiculo() {
+      const tipo = document.getElementById('tipo_veiculo').value;
+      const carretaSection = document.getElementById('carretaSection');
+      if (tipo === 'Truck') {
+        carretaSection.style.display = 'none';
+        document.getElementById('crlv_carreta').required = false;
+      } else {
+        carretaSection.style.display = 'block';
+        document.getElementById('crlv_carreta').required = true;
+      }
+    }
   </script>
 </body>
 </html>
