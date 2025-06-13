@@ -4,68 +4,86 @@
   <meta charset="UTF-8">
   <title>Painel Administrativo - DRM</title>
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Arial', sans-serif;
-      background: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
+  body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+
+  .container {
+    background: #fff;
+    width: 95%;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 30px 20px;
+    border-radius: 15px;
+    box-sizing: border-box;
+  }
+
+  .logo {
+    display: block;
+    margin: 0 auto 20px auto;
+    max-width: 80%;
+    height: auto;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+
+  button, .btn {
+    width: 100%;
+    background: #0050c8;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 12px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  button:hover, .btn:hover {
+    background: #003e99;
+  }
+
+  .btn.green {
+    background: #28a745;
+  }
+
+  .btn.green:hover {
+    background: #1e7e34;
+  }
+
+  label {
+    text-align: left;
+    display: block;
+    margin: 5px 0 0 2px;
+    font-weight: bold;
+    font-size: 15px;
+  }
+
+  @media screen and (max-width: 400px) {
     .container {
-      background: white;
-      padding: 30px 20px;
-      border-radius: 15px;
-      width: 95%;
-      max-width: 600px;
-      box-sizing: border-box;
+      padding: 20px 15px;
     }
-    .logo {
-      max-width: 280px;
-      display: block;
-      margin: 0 auto 20px auto;
+    input, select, textarea, button {
+      font-size: 15px;
     }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      margin-bottom: 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-sizing: border-box;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #0050c8;
-      color: white;
-      border: none;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background-color: #003e99;
-    }
-    .carga-card {
-      background: #f9f9f9;
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
-    .carga-card button {
-      margin-top: 8px;
-      background: #dc3545;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
   <div class="container">
@@ -90,70 +108,3 @@
     <h2 style="text-align:center;">Cargas Atuais</h2>
     <div id="lista"></div>
   </div>
-
-  <script>
-    const url = "https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec";
-
-    function cadastrarCarga() {
-      const dados = {
-        id: document.getElementById("id").value,
-        origem: document.getElementById("origem").value,
-        destino: document.getElementById("destino").value,
-        veiculo: document.getElementById("veiculo").value,
-        tipo: document.getElementById("tipo").value,
-        peso: document.getElementById("peso").value,
-        rastreado: document.getElementById("rastreado").value,
-        valor: document.getElementById("valor").value,
-        whatsapp: document.getElementById("whatsapp").value,
-        observacao: document.getElementById("observacao").value
-      };
-
-      const form = new URLSearchParams(dados);
-
-      fetch(url, {
-        method: "POST",
-        body: form
-      })
-      .then(res => res.text())
-      .then(msg => {
-        document.getElementById("mensagem").textContent = msg;
-        carregarCargas();
-      })
-      .catch(err => {
-        document.getElementById("mensagem").textContent = "❌ Erro ao enviar dados.";
-      });
-    }
-
-    function removerCarga(id) {
-      fetch(`${url}?id=${id}`, { method: "DELETE" })
-        .then(res => res.text())
-        .then(msg => {
-          alert(msg);
-          carregarCargas();
-        });
-    }
-
-    function carregarCargas() {
-      fetch(url)
-        .then(res => res.json())
-        .then(dados => {
-          const lista = document.getElementById("lista");
-          lista.innerHTML = "";
-          dados.forEach(c => {
-            const div = document.createElement("div");
-            div.className = "carga-card";
-            div.innerHTML = `
-              <strong>ID:</strong> ${c.id}<br>
-              ${c.origem} → ${c.destino}<br>
-              Tipo: ${c.tipo} | Veículo: ${c.veiculo} | Valor: R$ ${c.valor}<br>
-              <button onclick="removerCarga('${c.id}')">🗑️ Remover</button>
-            `;
-            lista.appendChild(div);
-          });
-        });
-    }
-
-    carregarCargas();
-  </script>
-</body>
-</html>
