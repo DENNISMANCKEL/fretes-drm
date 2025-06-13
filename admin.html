@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Painel Administrativo - DRM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body, html {
       box-sizing: border-box;
-      overflow-x: hidden;
       margin: 0;
       padding: 0;
       background: black;
@@ -69,12 +69,12 @@
       background: #1e7e34;
     }
 
-    label {
-      text-align: left;
-      display: block;
-      margin: 5px 0 0 2px;
-      font-weight: bold;
-      font-size: 15px;
+    .btn.red {
+      background: #dc3545;
+    }
+
+    .btn.red:hover {
+      background: #c82333;
     }
 
     .carga-card {
@@ -82,6 +82,15 @@
       border-radius: 10px;
       padding: 15px;
       margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    label {
+      text-align: left;
+      display: block;
+      margin: 5px 0 0 2px;
+      font-weight: bold;
+      font-size: 15px;
     }
 
     @media screen and (max-width: 400px) {
@@ -189,7 +198,7 @@
               <strong>ID:</strong> ${c.id}<br>
               ${c.origem} → ${c.destino}<br>
               Tipo: ${c.tipo} | Veículo: ${c.veiculo} | Valor: R$ ${c.valor}<br>
-              <button onclick="removerCarga('${c.id}')">🗑️ Remover</button>
+              <button class="btn red" onclick="removerCarga('${c.id}')">🗑️ Remover</button>
             `;
             lista.appendChild(div);
           });
@@ -199,7 +208,6 @@
         });
     }
 
-    // Carrega assim que abre
     carregarCargas();
   </script>
 </body>
