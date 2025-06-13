@@ -58,6 +58,13 @@
       font-weight: bold;
       margin-top: 15px;
     }
+    #mensagem-sucesso {
+      display: none;
+      text-align: center;
+      color: green;
+      font-weight: bold;
+      margin-top: 15px;
+    }
     @media screen and (max-width: 400px) {
       .container {
         padding: 20px 15px;
@@ -69,7 +76,7 @@
   <div class="container">
     <img src="logo.png" alt="Divulga Fretes DRM" class="logo">
     <h2 style="text-align: center;">Envio de Documentos</h2>
-    <form action="https://formsubmit.co/programacao03@agilixlogistica.com.br" method="POST" enctype="multipart/form-data">
+    <form id="formDocumentos" action="https://formsubmit.co/programacao03@agilixlogistica.com.br" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="frete_id" id="frete_id">
 
       <label>CNH do Motorista</label>
@@ -122,6 +129,8 @@
 
       <button type="submit">📎 Enviar Documentos</button>
     </form>
+
+    <div id="mensagem-sucesso">✅ Documentos enviados com sucesso!</div>
   </div>
 
   <script>
@@ -129,16 +138,20 @@
     const freteId = urlParams.get('frete_id') || 'Não especificado';
     document.getElementById('frete_id').value = freteId;
 
-    // Mostrar/ocultar CRLV da Carreta
     const tipoVeiculo = document.getElementById('tipo_veiculo');
     const crlvCarretaDiv = document.getElementById('crlvCarretaDiv');
 
     tipoVeiculo.addEventListener('change', function () {
-      if (this.value === 'CAVALO/CARRETA') {
-        crlvCarretaDiv.style.display = 'block';
-      } else {
-        crlvCarretaDiv.style.display = 'none';
-      }
+      crlvCarretaDiv.style.display = (this.value === 'CAVALO/CARRETA') ? 'block' : 'none';
+    });
+
+    // Feedback visual após envio
+    const form = document.getElementById('formDocumentos');
+    form.addEventListener('submit', function (e) {
+      setTimeout(() => {
+        form.reset();
+        document.getElementById('mensagem-sucesso').style.display = 'block';
+      }, 1000); // simula tempo de envio
     });
   </script>
 </body>
