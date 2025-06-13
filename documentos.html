@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Envio de Documentos - DRM</title>
   <style>
     body {
@@ -34,6 +35,7 @@
       border: 1px solid #ccc;
       border-radius: 8px;
       box-sizing: border-box;
+      font-size: 16px;
     }
     button {
       width: 100%;
@@ -55,6 +57,11 @@
       display: block;
       text-align: left;
       margin-top: 10px;
+    }
+    @media screen and (max-width: 480px) {
+      input, select, textarea, button {
+        font-size: 15px;
+      }
     }
   </style>
 </head>
