@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Envio de Documentos - DRM</title>
+  <meta http-equiv="refresh" content="3;url=motorista.html">
   <style>
     body {
       margin: 0;
@@ -58,13 +59,6 @@
       font-weight: bold;
       margin-top: 15px;
     }
-    #mensagem-sucesso {
-      display: none;
-      text-align: center;
-      color: green;
-      font-weight: bold;
-      margin-top: 15px;
-    }
     @media screen and (max-width: 400px) {
       .container {
         padding: 20px 15px;
@@ -76,7 +70,8 @@
   <div class="container">
     <img src="logo.png" alt="Divulga Fretes DRM" class="logo">
     <h2 style="text-align: center;">Envio de Documentos</h2>
-    <form id="formDocumentos" action="https://formsubmit.co/programacao03@agilixlogistica.com.br" method="POST" enctype="multipart/form-data">
+    <form action="https://formsubmit.co/programacao03@agilixlogistica.com.br" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="_next" value="motorista.html">
       <input type="hidden" name="frete_id" id="frete_id">
 
       <label>CNH do Motorista</label>
@@ -129,8 +124,6 @@
 
       <button type="submit">📎 Enviar Documentos</button>
     </form>
-
-    <div id="mensagem-sucesso">✅ Documentos enviados com sucesso!</div>
   </div>
 
   <script>
@@ -143,15 +136,6 @@
 
     tipoVeiculo.addEventListener('change', function () {
       crlvCarretaDiv.style.display = (this.value === 'CAVALO/CARRETA') ? 'block' : 'none';
-    });
-
-    // Feedback visual após envio
-    const form = document.getElementById('formDocumentos');
-    form.addEventListener('submit', function (e) {
-      setTimeout(() => {
-        form.reset();
-        document.getElementById('mensagem-sucesso').style.display = 'block';
-      }, 1000); // simula tempo de envio
     });
   </script>
 </body>
