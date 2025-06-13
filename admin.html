@@ -164,25 +164,22 @@
       }
     }
 
-    async function removerCarga(id) {
-      const confirmacao = confirm(`Tem certeza que deseja remover a carga ID ${id}?`);
-      if (!confirmacao) return;
+   async function removerCarga(id) {
+  const confirmacao = confirm(`Tem certeza que deseja remover a carga ID ${id}?`);
+  if (!confirmacao) return;
 
-      const params = new URLSearchParams({ acao: "deletar", id });
+  const urlComParametro = `${url}?acao=deletar&id=${encodeURIComponent(id)}`;
 
-      try {
-        const resposta = await fetch(url, {
-          method: "POST",
-          body: params
-        });
-        const texto = await resposta.text();
-        alert(texto);
-        carregarCargas();
-      } catch (error) {
-        alert("❌ Erro ao tentar remover carga.");
-        console.error(error);
-      }
-    }
+  try {
+    const resposta = await fetch(urlComParametro);
+    const texto = await resposta.text();
+    alert(texto);
+    carregarCargas();
+  } catch (error) {
+    alert("❌ Erro ao tentar remover carga.");
+    console.error(error);
+  }
+}
 
     window.onload = carregarCargas;
   </script>
