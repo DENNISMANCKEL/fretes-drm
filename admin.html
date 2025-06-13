@@ -164,21 +164,22 @@
       }
     }
 
-   async function removerCarga(id) {
-  const confirmacao = confirm(`Tem certeza que deseja remover a carga ID ${id}?`);
-  if (!confirmacao) return;
+  function removerCarga(id) {
+  const form = new URLSearchParams();
+  form.append("acao", "excluir");
+  form.append("id", id);
 
-  const urlComParametro = `${url}?acao=deletar&id=${encodeURIComponent(id)}`;
-
-  try {
-    const resposta = await fetch(urlComParametro);
-    const texto = await resposta.text();
-    alert(texto);
+  fetch(url, {
+    method: "POST",
+    body: form
+  })
+  .then(res => res.text())
+  .then(msg => {
+    alert(msg);
     carregarCargas();
-  } catch (error) {
-    alert("❌ Erro ao tentar remover carga.");
-    console.error(error);
-  }
+  })
+  .catch(err => alert("Erro ao deletar carga"));
+}
 }
     window.onload = carregarCargas;
   </script>
