@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Envio de Documentos - DRM</title>
   <style>
     body {
@@ -16,39 +16,35 @@
     }
     .container {
       background: white;
-      padding: 40px 30px;
+      padding: 30px 20px;
       border-radius: 15px;
-      width: 90%;
+      width: 95%;
       max-width: 600px;
-      text-align: left;
+      text-align: center;
       box-sizing: border-box;
     }
-    h2 {
-      color: #2a5d9f;
-      text-align: center;
-      margin-bottom: 25px;
-    }
-    label {
-      font-weight: bold;
+    .logo {
       display: block;
-      margin-top: 15px;
-      color: #333;
+      margin: 0 auto 25px auto;
+      max-width: 80%;
+      height: auto;
+      filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));
+      transition: transform 0.3s ease;
     }
-    input[type="text"], input[type="file"], textarea {
+    .logo:hover {
+      transform: scale(1.05);
+    }
+    input[type="text"], input[type="file"] {
       width: 100%;
       padding: 12px;
-      margin-top: 5px;
+      margin: 10px 0;
       border: 1px solid #ccc;
       border-radius: 8px;
       box-sizing: border-box;
-      font-size: 14px;
-      resize: vertical;
     }
     button {
-      display: block;
       width: 100%;
-      margin-top: 25px;
-      padding: 15px;
+      padding: 14px;
       font-size: 16px;
       font-weight: bold;
       color: white;
@@ -64,46 +60,54 @@
   </style>
 </head>
 <body>
+  <img src="logo.png" alt="Divulga Fretes DRM" class="logo">
   <div class="container">
-    <h2>Envio de Documentos do Motorista</h2>
-    <form action="https://formsubmit.co/programacao03@agilixlogistica.com.br" method="POST" enctype="multipart/form-data">
-      <input type="hidden" name="frete_id" id="frete_id" />
-
-      <label>CNH do Motorista:</label>
-      <input type="file" name="cnh" required />
-
-      <label>ANTT:</label>
-      <input type="file" name="antt" required />
-
-      <label>CRLV do Cavalo/Truck:</label>
-      <input type="file" name="crlv_cavalo" required />
-
-      <label>CRLV da Carreta:</label>
-      <input type="file" name="crlv_carreta" required />
-
-      <label>Comprovante de Endereço:</label>
-      <input type="file" name="endereco" required />
-
-      <label>Referências Pessoais:</label>
-      <textarea name="ref_pessoais" required rows="3"></textarea>
-
-      <label>Referências Comerciais:</label>
-      <textarea name="ref_comerciais" required rows="3"></textarea>
-
-      <label>Telefone do Motorista:</label>
-      <input type="text" name="telefone" required />
-
-      <label>Observações:</label>
-      <textarea name="observacoes" rows="3"></textarea>
-
-      <button type="submit">Enviar Documentos</button>
-    </form>
+    <h2>Envio de Documentos</h2>
+    <input type="text" id="nome" placeholder="Seu nome completo">
+    <input type="text" id="frete_id" placeholder="ID da carga">
+    <input type="file" id="arquivo" accept=".pdf,.jpg,.jpeg,.png">
+    <button onclick="enviarDocumento()">Enviar</button>
+    <p id="mensagem" style="margin-top: 15px;"></p>
   </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const freteId = urlParams.get('frete_id') || '';
-    document.getElementById('frete_id').value = freteId;
+    const url = "https://script.google.com/macros/s/AKfycbwL18MW8t3OK7SC9O0pJSb_yUpI2K3hfdvRgdynFj6QidXK8BdUuXihCkPzWl37CNi_/exec";
+
+    function enviarDocumento() {
+      const nome = document.getElementById("nome").value;
+      const frete_id = document.getElementById("frete_id").value;
+      const arquivo = document.getElementById("arquivo").files[0];
+
+      if (!nome || !frete_id || !arquivo) {
+        document.getElementById("mensagem").textContent = "Por favor, preencha todos os campos.";
+        return;
+      }
+
+      const form = new FormData();
+      form.append("nome", nome);
+      form.append("frete_id", frete_id);
+      form.append("arquivo", arquivo);
+
+      fetch(url, {
+        method: "POST",
+        body: form
+      })
+      .then(res => res.text())
+      .then(msg => {
+        document.getElementById("mensagem").textContent = msg;
+        document.getElementById("nome").value = "";
+        document.getElementById("frete_id").value = "";
+        document.getElementById("arquivo").value = "";
+      })
+      .catch(() => {
+        document.getElementById("mensagem").textContent = "Erro ao enviar o documento.";
+      });
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("frete_id")) {
+      document.getElementById("frete_id").value = params.get("frete_id");
+    }
   </script>
 </body>
 </html>
