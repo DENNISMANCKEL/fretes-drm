@@ -2,125 +2,136 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Envio de Documentos - DRM</title>
+  <title>Envio de Documentos - Divulga Fretes DRM</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      background: black;
+      background-color: black;
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
+      color: #000;
     }
     .container {
-      background: white;
       max-width: 600px;
-      margin: 20px auto;
+      margin: auto;
+      background: white;
       padding: 20px;
       border-radius: 12px;
+      margin-top: 20px;
     }
     h2 {
       text-align: center;
-      color: black;
+      color: #000;
     }
     label {
       font-weight: bold;
-      display: block;
       margin-top: 10px;
+      display: block;
     }
     input, select, textarea {
       width: 100%;
       padding: 10px;
-      margin-top: 6px;
+      margin: 6px 0;
+      box-sizing: border-box;
       border-radius: 6px;
       border: 1px solid #ccc;
     }
     button {
-      width: 100%;
-      padding: 12px;
+      display: inline-block;
       background-color: #0055cc;
       color: white;
-      font-weight: bold;
+      padding: 10px;
+      width: 100%;
       border: none;
       border-radius: 6px;
-      margin-top: 15px;
+      margin-top: 12px;
+      font-weight: bold;
       cursor: pointer;
     }
     .logo {
       display: block;
-      margin: 0 auto 15px auto;
+      margin: 0 auto 10px auto;
       max-width: 180px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img src="logo.png" alt="Logo" class="logo">
+    <img src="logo.png" alt="Logo Divulga Fretes DRM" class="logo">
     <h2>Envio de Documentos</h2>
-    <form action="https://formsubmit.co/programacao03@agilixlogistica.com.br" method="POST" enctype="multipart/form-data">
-      
-      <label>Tipo de Veículo:</label>
-      <select name="tipo_veiculo" id="tipo_veiculo" onchange="mostrarCRLVCarreta()" required>
+
+    <form action="https://formsubmit.co/SEU_EMAIL_AQUI" method="POST" enctype="multipart/form-data">
+
+      <!-- TIPO DE VEÍCULO -->
+      <label for="tipoVeiculo">Tipo de Veículo</label>
+      <select id="tipoVeiculo" name="Tipo de Veículo" required>
         <option value="">Selecione</option>
-        <option value="Truck">Truck</option>
-        <option value="Cavalo + Carreta">Cavalo + Carreta</option>
+        <option value="TRUCK">TRUCK</option>
+        <option value="CARRETA">CARRETA</option>
       </select>
 
-      <input type="hidden" name="frete_id" id="frete_id">
+      <!-- ID DA CARGA (pré-preenchido pela URL) -->
+      <label for="id">ID da Carga</label>
+      <input type="text" id="id" name="ID da Carga" readonly>
 
-      <label>Nome do Motorista:</label>
-      <input type="text" name="nome_motorista" required>
+      <!-- CAMPOS DE TEXTO -->
+      <label for="nomeMotorista">Nome do Motorista</label>
+      <input type="text" id="nomeMotorista" name="Nome do Motorista" required>
 
-      <label>Telefone do Motorista:</label>
-      <input type="text" name="telefone_motorista" required>
+      <label for="telefoneMotorista">Telefone do Motorista</label>
+      <input type="text" id="telefoneMotorista" name="Telefone do Motorista" required>
 
-      <label>Contatos Comerciais:</label>
-      <textarea name="contatos_comerciais" required></textarea>
+      <label for="contatosComerciais">Contatos Comerciais</label>
+      <textarea id="contatosComerciais" name="Contatos Comerciais"></textarea>
 
-      <label>Contatos Pessoais:</label>
-      <textarea name="contatos_pessoais" required></textarea>
+      <label for="contatosPessoais">Contatos Pessoais</label>
+      <textarea id="contatosPessoais" name="Contatos Pessoais"></textarea>
 
-      <label>CNH Motorista:</label>
-      <input type="file" name="cnh" required>
+      <!-- UPLOADS -->
+      <label>CNH Motorista</label>
+      <input type="file" name="CNH Motorista" required>
 
-      <label>CRLV do Truck / Cavalo:</label>
-      <input type="file" name="crlv_cavalo" required>
+      <label>CRLV do Truck / Cavalo</label>
+      <input type="file" name="CRLV do Truck ou Cavalo" required>
 
-      <div id="crlv_carreta_field" style="display: none;">
-        <label>CRLV da Carreta:</label>
-        <input type="file" name="crlv_carreta">
-      </div>
+      <label>CRLV da Carreta</label>
+      <input type="file" name="CRLV da Carreta">
 
-      <label>ANTT do Proprietário:</label>
-      <input type="file" name="antt" required>
+      <label>ANTT do Proprietário</label>
+      <input type="file" name="ANTT do Proprietário">
 
-      <label>Dados do Rastreador:</label>
-      <input type="file" name="rastreador" required>
+      <label>Dados do Rastreador</label>
+      <input type="file" name="Dados do Rastreador">
 
-      <label>Comprovante de Endereço:</label>
-      <input type="file" name="endereco" required>
+      <label>Comprovante de Endereço do Motorista</label>
+      <input type="file" name="Comprovante de Endereço do Motorista">
 
-      <label>TAG Pedágio:</label>
-      <input type="file" name="tag_pedagio" required>
+      <label>Tag Pedágio</label>
+      <input type="file" name="Tag Pedágio">
 
-      <label>Dados PIX Proprietário:</label>
-      <input type="file" name="pix_proprietario" required>
+      <label>Dados PIX do Proprietário</label>
+      <input type="file" name="Dados PIX do Proprietário">
 
-      <label>Observação:</label>
-      <textarea name="observacoes"></textarea>
+      <label for="observacoes">Observação</label>
+      <textarea id="observacoes" name="Observação"></textarea>
 
-      <button type="submit">Enviar Documentos</button>
+      <!-- Oculta Captcha -->
+      <input type="hidden" name="_captcha" value="false">
+
+      <!-- Redirecionamento Automático após envio -->
+      <input type="hidden" name="_redirect" value="https://dennismanckel.github.io/fretes-drm/motorista.html">
+
+      <button type="submit">Enviar</button>
     </form>
   </div>
 
   <script>
-    function mostrarCRLVCarreta() {
-      const tipo = document.getElementById('tipo_veiculo').value;
-      document.getElementById('crlv_carreta_field').style.display = (tipo === 'Cavalo + Carreta') ? 'block' : 'none';
-    }
-
+    // Preenche o campo ID da Carga com base no parâmetro da URL
     const params = new URLSearchParams(window.location.search);
-    if (params.get('frete_id')) {
-      document.getElementById('frete_id').value = params.get('frete_id');
+    const idCarga = params.get("frete_id");
+    if (idCarga) {
+      document.getElementById("id").value = idCarga;
     }
   </script>
 </body>
