@@ -1,113 +1,65 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Envio de Documentos - DRM</title>
+  <title>Cargas Disponíveis - DRM</title>
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Arial', sans-serif;
-      background: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-    .container {
-      background: white;
-      padding: 30px 20px;
-      border-radius: 15px;
-      width: 95%;
-      max-width: 600px;
-      text-align: center;
-      box-sizing: border-box;
-    }
-    .logo {
-      display: block;
-      margin: 0 auto 25px auto;
-      max-width: 80%;
-      height: auto;
-      filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));
-      transition: transform 0.3s ease;
-    }
-    .logo:hover {
-      transform: scale(1.05);
-    }
-    input[type="text"], input[type="file"] {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-sizing: border-box;
-    }
-    button {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: bold;
-      color: white;
-      background-color: #0050c8;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background-color: #003e99;
-    }
-  </style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .container {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+  }
+  .logo {
+    display: block;
+    margin: 0 auto 25px auto;
+    max-width: 80%;
+    height: auto;
+    filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));
+    transition: transform 0.3s ease;
+  }
+  .logo:hover {
+    transform: scale(1.05);
+  }
+  .btn {
+    display: block;
+    width: 80%;
+    max-width: 300px;
+    margin: 15px auto;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #0050c8;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .btn:hover {
+    background-color: #003e99;
+  }
+</style>
 </head>
 <body>
   <img src="logo.png" alt="Divulga Fretes DRM" class="logo">
   <div class="container">
-    <h2>Envio de Documentos</h2>
-    <input type="text" id="nome" placeholder="Seu nome completo">
-    <input type="text" id="frete_id" placeholder="ID da carga">
-    <input type="file" id="arquivo" accept=".pdf,.jpg,.jpeg,.png">
-    <button onclick="enviarDocumento()">Enviar</button>
-    <p id="mensagem" style="margin-top: 15px;"></p>
+    <h2>Cargas Disponíveis</h2>
+    <p>Lista de cargas será exibida aqui.</p>
   </div>
-
-  <script>
-    const url = "https://script.google.com/macros/s/AKfycbwL18MW8t3OK7SC9O0pJSb_yUpI2K3hfdvRgdynFj6QidXK8BdUuXihCkPzWl37CNi_/exec";
-
-    function enviarDocumento() {
-      const nome = document.getElementById("nome").value;
-      const frete_id = document.getElementById("frete_id").value;
-      const arquivo = document.getElementById("arquivo").files[0];
-
-      if (!nome || !frete_id || !arquivo) {
-        document.getElementById("mensagem").textContent = "Por favor, preencha todos os campos.";
-        return;
-      }
-
-      const form = new FormData();
-      form.append("nome", nome);
-      form.append("frete_id", frete_id);
-      form.append("arquivo", arquivo);
-
-      fetch(url, {
-        method: "POST",
-        body: form
-      })
-      .then(res => res.text())
-      .then(msg => {
-        document.getElementById("mensagem").textContent = msg;
-        document.getElementById("nome").value = "";
-        document.getElementById("frete_id").value = "";
-        document.getElementById("arquivo").value = "";
-      })
-      .catch(() => {
-        document.getElementById("mensagem").textContent = "Erro ao enviar o documento.";
-      });
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("frete_id")) {
-      document.getElementById("frete_id").value = params.get("frete_id");
-    }
-  </script>
 </body>
 </html>
