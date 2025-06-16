@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Cargas Disponíveis - DRM</title>
+  <title>Envio de Documentos - DRM</title>
   <style>
     body {
       margin: 0;
@@ -24,13 +24,26 @@
       box-sizing: border-box;
     }
     .logo {
-      max-width: 280px;
-      margin-bottom: 25px;
-    }
-    .btn {
       display: block;
-      width: 90%;
-      margin: 10px auto;
+      margin: 0 auto 25px auto;
+      max-width: 80%;
+      height: auto;
+      filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));
+      transition: transform 0.3s ease;
+    }
+    .logo:hover {
+      transform: scale(1.05);
+    }
+    input[type="text"], input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
       padding: 14px;
       font-size: 16px;
       font-weight: bold;
@@ -40,78 +53,61 @@
       border-radius: 8px;
       cursor: pointer;
       transition: background 0.3s ease;
-      text-decoration: none;
     }
-    .btn:hover {
+    button:hover {
       background-color: #003e99;
-    }
-    .btn.green {
-      background-color: #28a745;
-    }
-    .btn.green:hover {
-      background-color: #1e7e34;
-    }
-    .frete-card {
-      background: #ffffff;
-      padding: 16px;
-      margin-bottom: 12px;
-      border-radius: 10px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      text-align: left;
-    }
-    .frete-card strong {
-      color: #000;
     }
   </style>
 </head>
 <body>
+  <img src="logo.png" alt="Divulga Fretes DRM" class="logo">
   <div class="container">
-    <img src="logo.png" alt="Divulga Fretes DRM" class="logo">
-    <h2 style="margin-bottom: 20px;">Cargas Disponíveis</h2>
-    <div id="lista-cargas">Carregando...</div>
+    <h2>Envio de Documentos</h2>
+    <input type="text" id="nome" placeholder="Seu nome completo">
+    <input type="text" id="frete_id" placeholder="ID da carga">
+    <input type="file" id="arquivo" accept=".pdf,.jpg,.jpeg,.png">
+    <button onclick="enviarDocumento()">Enviar</button>
+    <p id="mensagem" style="margin-top: 15px;"></p>
   </div>
 
   <script>
-    const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec";
+    const url = "https://script.google.com/macros/s/AKfycbwL18MW8t3OK7SC9O0pJSb_yUpI2K3hfdvRgdynFj6QidXK8BdUuXihCkPzWl37CNi_/exec";
 
-    function formatarValor(valor) {
-      const num = parseFloat(String(valor).replace(/[R$\s.]/g, "").replace(",", "."));
-      if (isNaN(num)) return valor;
-      return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    function enviarDocumento() {
+      const nome = document.getElementById("nome").value;
+      const frete_id = document.getElementById("frete_id").value;
+      const arquivo = document.getElementById("arquivo").files[0];
+
+      if (!nome || !frete_id || !arquivo) {
+        document.getElementById("mensagem").textContent = "Por favor, preencha todos os campos.";
+        return;
+      }
+
+      const form = new FormData();
+      form.append("nome", nome);
+      form.append("frete_id", frete_id);
+      form.append("arquivo", arquivo);
+
+      fetch(url, {
+        method: "POST",
+        body: form
+      })
+      .then(res => res.text())
+      .then(msg => {
+        document.getElementById("mensagem").textContent = msg;
+        document.getElementById("nome").value = "";
+        document.getElementById("frete_id").value = "";
+        document.getElementById("arquivo").value = "";
+      })
+      .catch(() => {
+        document.getElementById("mensagem").textContent = "Erro ao enviar o documento.";
+      });
     }
 
-    fetch(URL_SCRIPT)
-      .then(res => res.json())
-      .then(cargas => {
-        const lista = document.getElementById("lista-cargas");
-        lista.innerHTML = "";
-        cargas.forEach(c => {
-          const id = c.id || "sem_id";
-          const origem = c.origem || "";
-          const destino = c.destino || "";
-          const tipo = c.tipo || "";
-          const veiculo = c.veiculo || "";
-          const peso = c.peso || "-";
-          const rastreado = c.rastreado || "";
-          const valor = formatarValor(c.valor || "");
-          const whatsapp = String(c.whatsapp || "").replace(/\D/g, "");
-          const observacao = c.observacao || "-";
-          const msg = `Tenho interesse na carga ${origem} para ${destino} (ID: ${id})`;
-
-          const div = document.createElement("div");
-          div.className = "frete-card";
-          div.innerHTML = `
-            <strong>ID:</strong> ${id}<br>
-            <strong>${origem} → ${destino}</strong><br>
-            <strong>Veículo:</strong> ${veiculo} | <strong>Tipo:</strong> ${tipo}<br>
-            <strong>Peso:</strong> ${peso} | <strong>Rastreado:</strong> ${rastreado} | <strong>Valor:</strong> <strong>${valor}</strong><br>
-            <strong>📝 Observação:</strong> ${observacao}<br><br>
-            <a class="btn" target="_blank" href="https://wa.me/55${whatsapp}?text=${encodeURIComponent(msg)}">Tenho Interesse</a>
-            <a class="btn green" href="documentos.html?frete_id=${id}">📎 Enviar Documentos</a>
-          `;
-          lista.appendChild(div);
-        });
-      });
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("frete_id")) {
+      document.getElementById("frete_id").value = params.get("frete_id");
+    }
   </script>
 </body>
 </html>
