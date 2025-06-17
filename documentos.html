@@ -5,28 +5,27 @@
   <title>Envio de Documentos - DRM</title>
   <style>
     body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
       background: black;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      font-family: Arial, sans-serif;
     }
     .container {
       background: white;
       padding: 20px;
       border-radius: 10px;
-      width: 90%;
-      max-width: 500px;
+      width: 95%;
+      max-width: 700px;
     }
-    input, textarea, button {
+    input, textarea, select, button {
       width: 100%;
       padding: 10px;
       margin-top: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
+      box-sizing: border-box;
     }
     button {
       background-color: #0050c8;
@@ -42,19 +41,44 @@
 </head>
 <body>
   <div class="container">
-    <h2>Enviar Documentos</h2>
+    <h2>Envio de Documentos do Motorista</h2>
     <p><strong>ID da Carga:</strong> <span id="id-frete"></span></p>
-
     <input type="hidden" id="id">
 
-    <label for="nome">Nome:</label>
-    <input type="text" id="nome" placeholder="Digite seu nome">
+    <input type="text" id="nome" placeholder="Nome do Motorista">
+    <input type="text" id="telefone" placeholder="Telefone do Motorista">
 
-    <label for="telefone">Telefone:</label>
-    <input type="text" id="telefone" placeholder="(DDD) Número">
+    <h4>Contatos de Referência Pessoal:</h4>
+    <textarea id="ref_pessoal_1" placeholder="Contato 1"></textarea>
+    <textarea id="ref_pessoal_2" placeholder="Contato 2"></textarea>
+    <textarea id="ref_pessoal_3" placeholder="Contato 3"></textarea>
 
-    <label for="documentos">Documentos:</label>
-    <textarea id="documentos" placeholder="Exemplo: RG, CNH, ANTT..."></textarea>
+    <h4>Contatos de Referência Comercial:</h4>
+    <textarea id="ref_comercial_1" placeholder="Contato 1"></textarea>
+    <textarea id="ref_comercial_2" placeholder="Contato 2"></textarea>
+    <textarea id="ref_comercial_3" placeholder="Contato 3"></textarea>
+
+    <textarea id="observacao" placeholder="Observações"></textarea>
+
+    <h4>Tipo de Veículo:</h4>
+    <select id="tipo_veiculo" onchange="mostrarCamposCarreta()">
+      <option value="">Selecione o tipo</option>
+      <option>CARRO LEVE</option>
+      <option>TRUCK</option>
+      <option>CARRETA</option>
+      <option>BITREM</option>
+      <option>RODOTREM</option>
+    </select>
+
+    <input type="text" id="placa_cavalo" placeholder="Placa do Veículo (Cavalo/Truck)">
+    <input type="text" id="placa_carreta" placeholder="Placa da Carreta">
+    <input type="text" id="placa_carreta2" placeholder="Placa da Carreta 2" style="display:none;">
+
+    <input type="text" id="antt" placeholder="ANTT do Veículo">
+    <input type="text" id="rastreador" placeholder="Dados do Rastreador">
+    <input type="text" id="comprovante_endereco" placeholder="Comprovante de Endereço">
+    <input type="text" id="tag_pedagio" placeholder="TAG de Pedágio">
+    <input type="text" id="dados_bancarios" placeholder="Dados Bancários (PIX)">
 
     <button onclick="enviarDocumentos()">Enviar Documentos</button>
   </div>
@@ -67,29 +91,56 @@
       document.getElementById("id").value = id;
     }
 
+    function mostrarCamposCarreta() {
+      const tipo = document.getElementById("tipo_veiculo").value;
+      document.getElementById("placa_carreta").style.display = (tipo !== "CARRO LEVE" && tipo !== "TRUCK") ? "block" : "none";
+      document.getElementById("placa_carreta2").style.display = (tipo === "BITREM" || tipo === "RODOTREM") ? "block" : "none";
+    }
+
     function enviarDocumentos() {
       const url = "https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec";
-
       const form = new URLSearchParams();
+
       form.append("acao", "documentos");
       form.append("id", document.getElementById("id").value);
       form.append("nome", document.getElementById("nome").value);
       form.append("telefone", document.getElementById("telefone").value);
-      form.append("documentos", document.getElementById("documentos").value);
+      form.append("ref_pessoal", [
+        document.getElementById("ref_pessoal_1").value,
+        document.getElementById("ref_pessoal_2").value,
+        document.getElementById("ref_pessoal_3").value
+      ].join(' / '));
+      form.append("ref_comercial", [
+        document.getElementById("ref_comercial_1").value,
+        document.getElementById("ref_comercial_2").value,
+        document.getElementById("ref_comercial_3").value
+      ].join(' / '));
+      form.append("observacao", document.getElementById("observacao").value);
+      form.append("tipo_veiculo", document.getElementById("tipo_veiculo").value);
+      form.append("placa_cavalo", document.getElementById("placa_cavalo").value);
+      form.append("placa_carreta", document.getElementById("placa_carreta").value);
+      form.append("placa_carreta2", document.getElementById("placa_carreta2").value);
+      form.append("antt", document.getElementById("antt").value);
+      form.append("rastreador", document.getElementById("rastreador").value);
+      form.append("comprovante_endereco", document.getElementById("comprovante_endereco").value);
+      form.append("tag_pedagio", document.getElementById("tag_pedagio").value);
+      form.append("dados_bancarios", document.getElementById("dados_bancarios").value);
 
-      fetch(url, {
-        method: "POST",
-        body: form
-      })
+      fetch(url, { method: "POST", body: form })
       .then(res => res.text())
       .then(msg => {
         alert(msg);
         window.location.href = "motorista.html";
       })
-      .catch(() => {
-        alert("Erro ao enviar documentos.");
-      });
+      .catch(() => alert("Erro ao enviar documentos."));
     }
+
+    // Máscara telefone
+    document.getElementById("telefone").addEventListener("input", function() {
+      let v = this.value.replace(/\D/g, "");
+      v = v.replace(/^(\d{2})(\d{4,5})(\d{4}).*/, "($1)$2-$3");
+      this.value = v;
+    });
   </script>
 </body>
 </html>
