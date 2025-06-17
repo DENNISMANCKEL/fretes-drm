@@ -124,14 +124,24 @@
       });
     }
 
-    function removerCarga(id) {
-      fetch(`${url}?id=${id}`, { method: "DELETE" })
-        .then(res => res.text())
-        .then(msg => {
-          alert(msg);
-          carregarCargas();
-        });
-    }
+   function removerCarga(id) {
+  const form = new URLSearchParams();
+  form.append("acao", "excluir");
+  form.append("id", id);
+
+  fetch(url, {
+    method: "POST",
+    body: form
+  })
+  .then(res => res.text())
+  .then(msg => {
+    alert(msg);
+    carregarCargas();
+  })
+  .catch(() => {
+    alert("Erro ao tentar excluir a carga.");
+  });
+}
 
     function carregarCargas() {
       fetch(url)
