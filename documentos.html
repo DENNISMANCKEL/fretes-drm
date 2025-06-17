@@ -8,8 +8,9 @@
     section { background: white; padding: 20px; border-radius: 8px; margin: 20px auto; max-width: 800px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
     h2 { color: #2a5d9f; }
     label { font-weight: bold; display: block; margin-top: 15px; }
-    input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px; }
+    input, textarea, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px; }
     button { background: #2a5d9f; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 15px; }
+    .oculto { display: none; }
   </style>
 </head>
 <body>
@@ -17,23 +18,99 @@
     <h2>Envio de Documentos do Motorista</h2>
     <form action="https://formsubmit.co/programacao03@agilixlogistica.com.br" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="frete_id" id="frete_id">
-      <label>CNH do Motorista:</label><input type="file" name="cnh" required>
-      <label>ANTT:</label><input type="file" name="antt" required>
-      <label>CRLV do Cavalo/Truck:</label><input type="file" name="crlv_cavalo" required>
-      <label>CRLV da Carreta:</label><input type="file" name="crlv_carreta" required>
-      <label>Comprovante de Endereço:</label><input type="file" name="endereco" required>
-      <label>Referências Pessoais:</label><textarea name="ref_pessoais" required></textarea>
-      <label>Referências Comerciais:</label><textarea name="ref_comerciais" required></textarea>
-      <label>Telefone do Motorista:</label><input type="text" name="telefone" required>
-      <label>Observações:</label><textarea name="observacoes"></textarea>
+      <p><strong>ID da Carga:</strong> <span id="id_visual"></span></p>
+
+      <label>Nome do Motorista:</label>
+      <input type="text" name="nome_motorista" required>
+
+      <label>Telefone do Motorista:</label>
+      <input type="text" name="telefone" id="telefone" required>
+
+      <label>Contatos de Referência Pessoal (3):</label>
+      <textarea name="ref_pessoais" rows="3" placeholder="1.\n2.\n3."></textarea>
+
+      <label>Contatos de Referência Comercial (3):</label>
+      <textarea name="ref_comerciais" rows="3" placeholder="1.\n2.\n3."></textarea>
+
+      <label>Observações:</label>
+      <textarea name="observacoes"></textarea>
+
+      <label>Tipo de Veículo:</label>
+      <select name="tipo_veiculo" id="tipo_veiculo" required>
+        <option value="">Selecione</option>
+        <option value="leve">Carro Leve</option>
+        <option value="truck">Truck</option>
+        <option value="carreta">Carreta</option>
+        <option value="bitrem">Bitrem</option>
+        <option value="rodotrem">Rodotrem</option>
+      </select>
+
+      <label>CNH do Motorista:</label>
+      <input type="file" name="cnh" required>
+
+      <label>Placa do Veículo - Cavalo/Truck:</label>
+      <input type="text" name="placa_truck" required>
+
+      <div id="carreta_1" class="oculto">
+        <label>Placa da Carreta:</label>
+        <input type="text" name="placa_carreta">
+      </div>
+
+      <div id="carreta_2" class="oculto">
+        <label>Placa da Carreta 2:</label>
+        <input type="text" name="placa_carreta_2">
+      </div>
+
+      <label>ANTT do Veículo:</label>
+      <input type="file" name="antt" required>
+
+      <label>Dados do Rastreador:</label>
+      <input type="text" name="rastreador" required>
+
+      <label>Comprovante de Endereço:</label>
+      <input type="file" name="endereco" required>
+
+      <label>TAG de Pedágio:</label>
+      <input type="text" name="tag_pedagio">
+
+      <label>Dados Bancários (PIX):</label>
+      <input type="text" name="pix" required>
+
       <button type="submit">Enviar Documentos</button>
     </form>
   </section>
 
   <script>
+    // Puxa ID da URL
     const urlParams = new URLSearchParams(window.location.search);
     const freteId = urlParams.get('frete_id') || 'Não especificado';
     document.getElementById('frete_id').value = freteId;
+    document.getElementById('id_visual').innerText = freteId;
+
+    // Lógica para tipo de veículo
+    const tipoVeiculo = document.getElementById('tipo_veiculo');
+    const carreta1 = document.getElementById('carreta_1');
+    const carreta2 = document.getElementById('carreta_2');
+
+    tipoVeiculo.addEventListener('change', () => {
+      const tipo = tipoVeiculo.value;
+      if (tipo === 'carreta') {
+        carreta1.classList.remove('oculto');
+        carreta2.classList.add('oculto');
+      } else if (tipo === 'bitrem' || tipo === 'rodotrem') {
+        carreta1.classList.remove('oculto');
+        carreta2.classList.remove('oculto');
+      } else {
+        carreta1.classList.add('oculto');
+        carreta2.classList.add('oculto');
+      }
+    });
+
+    // Máscara de telefone
+    document.getElementById('telefone').addEventListener('input', function(e) {
+      let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
+      e.target.value = !x[2] ? x[1] : `(${x[1]})${x[2]}${x[3] ? '-' + x[3] : ''}`;
+    });
   </script>
 </body>
 </html>
