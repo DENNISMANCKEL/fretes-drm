@@ -2,29 +2,42 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Enviar Documentos - DRM</title>
+  <title>Envio de Documentos - DRM</title>
   <style>
     body { font-family: Arial, sans-serif; background: black; color: white; padding: 20px; }
     .container { background: white; color: black; padding: 20px; border-radius: 10px; }
     input, textarea, select, button { width: 100%; margin: 5px 0; padding: 8px; }
+    label { font-weight: bold; margin-top: 10px; display: block; }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Envio de Documentos - Frete ID: <span id="id-frete"></span></h2>
-    <form action="https://formsubmit.co/programacao03@agilixlogistica.com.br" method="POST" enctype="multipart/form-data">
-      <input type="hidden" name="_subject" value="📎 Documentos do Motorista">
+
+    <form action="https://formsubmit.co/seu_email@exemplo.com" method="POST" enctype="multipart/form-data" onsubmit="enviarSucesso()">
+
+      <!-- ID da carga (oculto) -->
       <input type="hidden" name="Frete ID" id="frete_id">
+      <input type="hidden" name="_subject" value="📎 Documentos do Motorista DRM">
 
-      <input type="text" name="Nome do Motorista" placeholder="Nome" required>
-      <input type="text" name="Telefone" id="telefone" placeholder="Telefone (99)9999-9999" required>
+      <label>Nome do Motorista:</label>
+      <input type="text" name="Nome do Motorista" required>
 
-      <textarea name="Referências Pessoais" placeholder="3 Contatos Pessoais"></textarea>
-      <textarea name="Referências Comerciais" placeholder="3 Contatos Comerciais"></textarea>
-      <textarea name="Observação" placeholder="Observações"></textarea>
+      <label>Telefone:</label>
+      <input type="text" name="Telefone" id="telefone" required>
 
-      <select name="Tipo de Veículo" id="tipo_veiculo" onchange="mostrarCampos()">
-        <option value="">Tipo de Veículo</option>
+      <label>Referências Pessoais:</label>
+      <textarea name="Referências Pessoais" placeholder="3 contatos pessoais"></textarea>
+
+      <label>Referências Comerciais:</label>
+      <textarea name="Referências Comerciais" placeholder="3 contatos comerciais"></textarea>
+
+      <label>Observações:</label>
+      <textarea name="Observação"></textarea>
+
+      <label>Tipo de Veículo:</label>
+      <select name="Tipo de Veículo" id="tipo_veiculo" onchange="mostrarCampos()" required>
+        <option value="">Selecione</option>
         <option>CARRO LEVE</option>
         <option>TRUCK</option>
         <option>CARRETA</option>
@@ -44,6 +57,9 @@
         <label>Placa da Carreta 2:</label>
         <input type="file" name="Placa Carreta 2">
       </div>
+
+      <label>CNH do Motorista:</label>
+      <input type="file" name="CNH" accept="image/*,application/pdf">
 
       <label>ANTT:</label>
       <input type="file" name="ANTT">
@@ -82,6 +98,13 @@
       const tipo = document.getElementById("tipo_veiculo").value;
       document.getElementById("carreta1").style.display = (tipo !== "CARRO LEVE" && tipo !== "TRUCK") ? "block" : "none";
       document.getElementById("carreta2").style.display = (tipo === "BITREM" || tipo === "RODOTREM") ? "block" : "none";
+    }
+
+    function enviarSucesso() {
+      setTimeout(() => {
+        alert("✅ Documentos enviados com sucesso!");
+        window.location.href = "motorista.html";
+      }, 500);
     }
   </script>
 </body>
