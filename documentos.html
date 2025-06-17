@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -46,48 +47,46 @@
       </select>
 
       <label>CNH do Motorista:</label>
-      <input type="file" name="cnh" required>
+      <input type="file" name="cnh" accept=".pdf,.jpg,.jpeg,.png" required>
 
       <label>Placa do Veículo - Cavalo/Truck:</label>
-      <input type="text" name="placa_truck" required>
+      <input type="file" name="placa_truck" accept=".pdf,.jpg,.jpeg,.png" required>
 
       <div id="carreta_1" class="oculto">
         <label>Placa da Carreta:</label>
-        <input type="text" name="placa_carreta">
+        <input type="file" name="placa_carreta" accept=".pdf,.jpg,.jpeg,.png">
       </div>
 
       <div id="carreta_2" class="oculto">
         <label>Placa da Carreta 2:</label>
-        <input type="text" name="placa_carreta_2">
+        <input type="file" name="placa_carreta_2" accept=".pdf,.jpg,.jpeg,.png">
       </div>
 
       <label>ANTT do Veículo:</label>
-      <input type="file" name="antt" required>
+      <input type="file" name="antt" accept=".pdf,.jpg,.jpeg,.png" required>
 
       <label>Dados do Rastreador:</label>
-      <input type="text" name="rastreador" required>
+      <input type="file" name="rastreador" accept=".pdf,.jpg,.jpeg,.png" required>
 
       <label>Comprovante de Endereço:</label>
-      <input type="file" name="endereco" required>
+      <input type="file" name="endereco" accept=".pdf,.jpg,.jpeg,.png" required>
 
       <label>TAG de Pedágio:</label>
-      <input type="text" name="tag_pedagio">
+      <input type="file" name="tag_pedagio" accept=".pdf,.jpg,.jpeg,.png" required>
 
       <label>Dados Bancários (PIX):</label>
-      <input type="text" name="pix" required>
+      <input type="file" name="pix" accept=".pdf,.jpg,.jpeg,.png" required>
 
       <button type="submit">Enviar Documentos</button>
     </form>
   </section>
 
   <script>
-    // Puxa ID da URL
     const urlParams = new URLSearchParams(window.location.search);
     const freteId = urlParams.get('frete_id') || 'Não especificado';
     document.getElementById('frete_id').value = freteId;
     document.getElementById('id_visual').innerText = freteId;
 
-    // Lógica para tipo de veículo
     const tipoVeiculo = document.getElementById('tipo_veiculo');
     const carreta1 = document.getElementById('carreta_1');
     const carreta2 = document.getElementById('carreta_2');
@@ -106,7 +105,6 @@
       }
     });
 
-    // Máscara de telefone
     document.getElementById('telefone').addEventListener('input', function(e) {
       let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
       e.target.value = !x[2] ? x[1] : `(${x[1]})${x[2]}${x[3] ? '-' + x[3] : ''}`;
