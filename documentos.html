@@ -1,57 +1,29 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Documentos do Motorista - DRM</title>
+  <title>Enviar Documentos - DRM</title>
   <style>
-    body {
-      background: black;
-      color: black;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-    .container {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      width: 95%;
-      max-width: 700px;
-    }
-    input, textarea, select, button {
-      width: 100%;
-      padding: 8px;
-      margin-top: 8px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    button {
-      background: #0050c8;
-      color: white;
-      font-weight: bold;
-    }
+    body { font-family: Arial, sans-serif; background: black; color: white; padding: 20px; }
+    .container { background: white; color: black; padding: 20px; border-radius: 10px; }
+    input, textarea, select, button { width: 100%; margin: 5px 0; padding: 8px; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Documentos do Motorista - ID: <span id="id-frete"></span></h2>
-    <form id="formDocumentos">
-      <input type="hidden" id="id" name="id">
+    <h2>Envio de Documentos - Frete ID: <span id="id-frete"></span></h2>
+    <form action="https://formsubmit.co/programacao03@agilixlogistica.com.br" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="_subject" value="📎 Documentos do Motorista">
+      <input type="hidden" name="Frete ID" id="frete_id">
 
-      <input type="text" name="nome" placeholder="Nome do Motorista" required>
-      <input type="text" id="telefone" name="telefone" placeholder="Telefone (99)9999-9999" required>
+      <input type="text" name="Nome do Motorista" placeholder="Nome" required>
+      <input type="text" name="Telefone" id="telefone" placeholder="Telefone (99)9999-9999" required>
 
-      <h4>Referências Pessoais:</h4>
-      <textarea name="ref_pessoal" placeholder="3 contatos pessoais, um por linha"></textarea>
+      <textarea name="Referências Pessoais" placeholder="3 Contatos Pessoais"></textarea>
+      <textarea name="Referências Comerciais" placeholder="3 Contatos Comerciais"></textarea>
+      <textarea name="Observação" placeholder="Observações"></textarea>
 
-      <h4>Referências Comerciais:</h4>
-      <textarea name="ref_comercial" placeholder="3 contatos comerciais, um por linha"></textarea>
-
-      <textarea name="observacao" placeholder="Observação"></textarea>
-
-      <select name="tipo_veiculo" id="tipo_veiculo" onchange="mostrarCampos()">
+      <select name="Tipo de Veículo" id="tipo_veiculo" onchange="mostrarCampos()">
         <option value="">Tipo de Veículo</option>
         <option>CARRO LEVE</option>
         <option>TRUCK</option>
@@ -60,15 +32,33 @@
         <option>RODOTREM</option>
       </select>
 
-      <input type="text" name="placa_cavalo" placeholder="Placa Cavalo/Truck">
-      <div id="carreta1"><input type="text" name="placa_carreta" placeholder="Placa Carreta"></div>
-      <div id="carreta2" style="display:none;"><input type="text" name="placa_carreta2" placeholder="Placa Carreta 2"></div>
+      <label>Placa do Cavalo/Truck:</label>
+      <input type="file" name="Placa Cavalo">
 
-      <input type="text" name="antt" placeholder="ANTT">
-      <input type="text" name="rastreador" placeholder="Rastreador">
-      <input type="text" name="comprovante_endereco" placeholder="Comprovante de Endereço">
-      <input type="text" name="tag_pedagio" placeholder="TAG Pedágio">
-      <input type="text" name="dados_bancarios" placeholder="PIX/Dados Bancários">
+      <div id="carreta1">
+        <label>Placa da Carreta:</label>
+        <input type="file" name="Placa Carreta">
+      </div>
+
+      <div id="carreta2" style="display:none;">
+        <label>Placa da Carreta 2:</label>
+        <input type="file" name="Placa Carreta 2">
+      </div>
+
+      <label>ANTT:</label>
+      <input type="file" name="ANTT">
+
+      <label>Rastreador:</label>
+      <input type="file" name="Rastreador">
+
+      <label>Comprovante de Endereço:</label>
+      <input type="file" name="Comprovante de Endereço">
+
+      <label>TAG Pedágio:</label>
+      <input type="file" name="TAG Pedágio">
+
+      <label>PIX / Dados Bancários:</label>
+      <input type="file" name="PIX Dados Bancarios">
 
       <button type="submit">Enviar Documentos</button>
     </form>
@@ -78,14 +68,8 @@
     const params = new URLSearchParams(window.location.search);
     const id = params.get("frete_id");
     if (id) {
-      document.getElementById("id-frete").textContent = id;
-      document.getElementById("id").value = id;
-    }
-
-    function mostrarCampos() {
-      const tipo = document.getElementById("tipo_veiculo").value;
-      document.getElementById("carreta1").style.display = (tipo !== "CARRO LEVE" && tipo !== "TRUCK") ? "block" : "none";
-      document.getElementById("carreta2").style.display = (tipo === "BITREM" || tipo === "RODOTREM") ? "block" : "none";
+      document.getElementById("id-frete").innerText = id;
+      document.getElementById("frete_id").value = id;
     }
 
     document.getElementById("telefone").addEventListener("input", function() {
@@ -94,20 +78,11 @@
       this.value = v;
     });
 
-    document.getElementById("formDocumentos").addEventListener("submit", function(event) {
-      event.preventDefault();
-      const url = "https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec";
-
-      const formData = new FormData(this);
-      formData.append("acao", "documentos");
-
-      fetch(url, { method: "POST", body: formData })
-        .then(response => response.text())
-        .then(msg => {
-          alert(msg);
-          window.location.href = "motorista.html";
-        });
-    });
+    function mostrarCampos() {
+      const tipo = document.getElementById("tipo_veiculo").value;
+      document.getElementById("carreta1").style.display = (tipo !== "CARRO LEVE" && tipo !== "TRUCK") ? "block" : "none";
+      document.getElementById("carreta2").style.display = (tipo === "BITREM" || tipo === "RODOTREM") ? "block" : "none";
+    }
   </script>
 </body>
 </html>
