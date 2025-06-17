@@ -195,11 +195,14 @@
             const div = document.createElement("div");
             div.className = "carga-card";
             div.innerHTML = `
-              <strong>ID:</strong> ${c.id}<br>
-              ${c.origem} → ${c.destino}<br>
-              Tipo: ${c.tipo} | Veículo: ${c.veiculo} | Valor: R$ ${c.valor}<br>
-              <button class="btn red" onclick="removerCarga('${c.id}')">🗑️ Remover</button>
-            `;
+  <p><strong>ID:</strong> ${carga[0]}</p>
+  <p><strong>${carga[1]} ➝ ${carga[2]}</strong></p>
+  <p>Tipo: ${carga[3]} | Veículo: ${carga[4]} | Valor: R$ ${carga[5]}</p>
+  <button class="btn red" onclick="removerCarga('${carga[0]}')">🗑️ Remover</button>
+  <a href="viagem.html?frete_id=${carga[0]}" target="_blank">
+    <button class="btn green" style="margin-left: 8px;">🛰️ Acompanhar Viagem</button>
+  </a>
+`;
             lista.appendChild(div);
           });
         })
