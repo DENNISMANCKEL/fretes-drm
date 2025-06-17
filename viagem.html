@@ -1,4 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle de Viagem | Divulga Fretes DRM</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 40px 0;
+      width: 95%;
+      max-width: 600px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    .logo {
+      max-width: 200px;
+      display: block;
+      margin: 0 auto 20px auto;
+    }
+    h2, h3 {
+      text-align: center;
+      color: #2a5d9f;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 5px;
+      font-size: 16px;
+    }
+    button {
+      background: #0050c8;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #003e99;
+    }
+    .status {
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="logo.png" alt="Logo" class="logo">
+    <h2>Controle da Viagem</h2>
+    <div id="dados_viagem">
+      <p><strong>ID da Carga:</strong> <span id="frete_id"></span></p>
+      <p><strong>Status:</strong> Em andamento</p>
+    </div>
 
+    <button onclick="enviarLocalizacao()">📍 Enviar Localização Atual</button>
+    <p class="status" id="status_local"></p>
+
+    <form action="https://formsubmit.co/programacao03@agilixlogistica.com.br" method="POST" enctype="multipart/form-data" style="margin-top: 20px;">
+      <input type="hidden" name="frete_id" id="form_frete_id">
+      <label for="nome_motorista">Seu nome:</label>
+      <input type="text" name="nome_motorista" required>
+
+      <label for="comprovante">📷 Enviar foto do canhoto (comprovante):</label>
+      <input type="file" name="comprovante" accept=".jpg,.jpeg,.png,.pdf" required>
+
+      <button type="submit">📤 Enviar Comprovante</button>
+    </form>
+
+    <button style="background:#28a745; margin-top:20px;" onclick="finalizarViagem()">✅ Finalizar Viagem</button>
+    <p class="status" id="status_final"></p>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const freteId = urlParams.get("frete_id") || "Não informado";
+    document.getElementById("frete_id").innerText = freteId;
+    document.getElementById("form_frete_id").value = freteId;
+
+    function enviarLocalizacao() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          const dados = new URLSearchParams();
+          dados.append("acao", "posicao");
+          dados.append("id", freteId);
+          dados.append("latitude", lat);
+          dados.append("longitude", lon);
+
+          fetch("https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec", {
+            method: "POST",
+            body: dados
+          })
+          .then(res => res.text())
+          .then(msg => {
+            document.getElementById("status_local").innerText = "📍 Localização enviada com sucesso!";
+          })
+          .catch(() => {
+            document.getElementById("status_local").innerText = "❌ Erro ao enviar localização.";
+          });
         }, () => {
           alert("Permita o acesso à sua localização para usar esta função.");
         });
