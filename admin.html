@@ -1,40 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Painel Administrativo - DRM</title>
+  <title>Painel Admin DRM</title>
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-    .container {
-      background: white;
-      padding: 30px 20px;
-      border-radius: 15px;
-      width: 95%;
-      max-width: 600px;
-      box-sizing: border-box;
-    }
-    input, select, textarea, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      margin-bottom: 12px;
-      border-radius: 6px;
-    }
-    button {
-      background-color: #0050c8;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
+    body { font-family: Arial, sans-serif; background: black; color: white; padding: 20px; }
+    .container { background: white; color: black; padding: 20px; border-radius: 10px; }
+    input, select, textarea, button { width: 100%; margin: 5px 0; padding: 8px; }
   </style>
 </head>
 <body>
@@ -43,8 +15,8 @@
     <input type="text" id="id" placeholder="ID da carga">
     <input type="text" id="origem" placeholder="Origem">
     <input type="text" id="destino" placeholder="Destino">
-    <input type="text" id="veiculo" placeholder="Tipo de Veículo">
-    <input type="text" id="tipo" placeholder="Tipo de Carga">
+    <input type="text" id="veiculo" placeholder="Veículo">
+    <input type="text" id="tipo" placeholder="Tipo">
     <input type="text" id="peso" placeholder="Peso">
     <select id="rastreado">
       <option value="">Rastreado?</option>
@@ -53,10 +25,9 @@
     </select>
     <input type="text" id="valor" placeholder="Valor">
     <input type="text" id="whatsapp" placeholder="WhatsApp">
-    <textarea id="observacao" placeholder="Observações"></textarea>
+    <textarea id="observacao" placeholder="Observação"></textarea>
     <button onclick="cadastrarCarga()">Cadastrar Carga</button>
     <p id="mensagem"></p>
-
     <h3>Cargas Atuais</h3>
     <div id="lista"></div>
   </div>
@@ -83,41 +54,26 @@
       fetch(url, { method: "POST", body: form })
         .then(res => res.text())
         .then(msg => {
-          document.getElementById("mensagem").textContent = msg;
+          document.getElementById("mensagem").innerText = msg;
           if (msg.includes("✅")) {
             document.querySelectorAll("input, textarea, select").forEach(el => el.value = "");
             document.getElementById("id").focus();
           }
           carregarCargas();
-        });
-    }
-
-    function removerCarga(id) {
-      const form = new URLSearchParams();
-      form.append("acao", "excluir");
-      form.append("id", id);
-
-      fetch(url, { method: "POST", body: form })
-        .then(res => res.text())
-        .then(msg => {
-          alert(msg);
-          carregarCargas();
+        })
+        .catch(err => {
+          document.getElementById("mensagem").innerText = "❌ Erro ao cadastrar.";
         });
     }
 
     function carregarCargas() {
       fetch(url)
         .then(res => res.json())
-        .then(dados => {
+        .then(cargas => {
           const lista = document.getElementById("lista");
           lista.innerHTML = "";
-          dados.forEach(c => {
-            lista.innerHTML += `
-              <div>
-                <strong>ID:</strong> ${c.id} - ${c.origem} → ${c.destino}
-                <button onclick="removerCarga('${c.id}')">Remover</button>
-              </div>
-            `;
+          cargas.forEach(c => {
+            lista.innerHTML += `<div><strong>ID:</strong> ${c.id} | ${c.origem} → ${c.destino}</div>`;
           });
         });
     }
