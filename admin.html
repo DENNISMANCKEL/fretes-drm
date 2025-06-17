@@ -169,16 +169,31 @@
       form.append("id", id);
 
       fetch(url, {
-        method: "POST",
-        body: form
-      })
-      .then(res => res.text())
-      .then(msg => {
-        alert(msg);
-        carregarCargas();
-      })
-      .catch(() => alert("Erro ao deletar carga."));
-    }
+  method: "POST",
+  body: form
+})
+.then(res => res.text())
+.then(msg => {
+  document.getElementById("mensagem").textContent = msg;
+
+  // Limpa todos os campos do formulário
+  document.getElementById("id").value = "";
+  document.getElementById("origem").value = "";
+  document.getElementById("destino").value = "";
+  document.getElementById("veiculo").value = "";
+  document.getElementById("tipo").value = "";
+  document.getElementById("peso").value = "";
+  document.getElementById("rastreado").value = "";
+  document.getElementById("valor").value = "";
+  document.getElementById("whatsapp").value = "";
+  document.getElementById("observacao").value = "";
+
+  // Foca novamente no campo ID
+  document.getElementById("id").focus();
+
+  // Recarrega a lista de cargas
+  carregarCargas();
+})
 
     function carregarCargas() {
       fetch(url)
