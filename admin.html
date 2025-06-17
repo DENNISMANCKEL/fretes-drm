@@ -94,35 +94,42 @@
   <script>
     const url = "https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec";
 
-    function cadastrarCarga() {
-      const dados = {
-        id: document.getElementById("id").value,
-        origem: document.getElementById("origem").value,
-        destino: document.getElementById("destino").value,
-        veiculo: document.getElementById("veiculo").value,
-        tipo: document.getElementById("tipo").value,
-        peso: document.getElementById("peso").value,
-        rastreado: document.getElementById("rastreado").value,
-        valor: document.getElementById("valor").value,
-        whatsapp: document.getElementById("whatsapp").value,
-        observacao: document.getElementById("observacao").value
-      };
+    <script>
+function cadastrarCarga() {
+  const dados = {
+    id: document.getElementById("id").value,
+    origem: document.getElementById("origem").value,
+    destino: document.getElementById("destino").value,
+    veiculo: document.getElementById("veiculo").value,
+    tipo: document.getElementById("tipo").value,
+    peso: document.getElementById("peso").value,
+    rastreado: document.getElementById("rastreado").value,
+    valor: document.getElementById("valor").value,
+    whatsapp: document.getElementById("whatsapp").value,
+    observacao: document.getElementById("observacao").value
+  };
 
-      const form = new URLSearchParams(dados);
+  const form = new URLSearchParams(dados);
 
-      fetch(url, {
-        method: "POST",
-        body: form
-      })
-      .then(res => res.text())
-      .then(msg => {
-        document.getElementById("mensagem").textContent = msg;
-        carregarCargas();
-      })
-      .catch(err => {
-        document.getElementById("mensagem").textContent = "❌ Erro ao enviar dados.";
-      });
+  fetch(url, {
+    method: "POST",
+    body: form
+  })
+  .then(res => res.text())
+  .then(msg => {
+    document.getElementById("mensagem").textContent = msg;
+
+    if (msg.includes("✅ SUCESSO")) {
+      document.querySelectorAll("input, textarea, select").forEach(el => el.value = "");
+      document.getElementById("id").focus();
     }
+
+    carregarCargas();
+  })
+  .catch(err => {
+    document.getElementById("mensagem").textContent = "❌ Erro ao enviar dados.";
+  });
+}
 
    function removerCarga(id) {
   const form = new URLSearchParams();
