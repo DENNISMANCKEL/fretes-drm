@@ -7,7 +7,7 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
       background: black;
       display: flex;
       justify-content: center;
@@ -22,133 +22,88 @@
       max-width: 600px;
       box-sizing: border-box;
     }
-    .logo {
-      max-width: 280px;
-      display: block;
-      margin: 0 auto 20px auto;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    input, select, textarea {
+    input, select, textarea, button {
       width: 100%;
       padding: 10px;
       margin-top: 8px;
       margin-bottom: 12px;
-      border: 1px solid #ccc;
       border-radius: 6px;
-      box-sizing: border-box;
     }
     button {
-      width: 100%;
-      padding: 12px;
       background-color: #0050c8;
       color: white;
-      border: none;
       font-weight: bold;
-      border-radius: 6px;
       cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background-color: #003e99;
-    }
-    .carga-card {
-      background: #f9f9f9;
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
-    .carga-card button {
-      margin-top: 8px;
-      background: #dc3545;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img src="logo.png" alt="Divulga Fretes DRM" class="logo">
     <h2>Cadastro de Carga</h2>
-    <input type="text" id="id" placeholder="ID da carga (ex: 123456)">
+    <input type="text" id="id" placeholder="ID da carga">
     <input type="text" id="origem" placeholder="Origem">
     <input type="text" id="destino" placeholder="Destino">
     <input type="text" id="veiculo" placeholder="Tipo de Veículo">
-    <input type="text" id="tipo" placeholder="Tipo de Carroceria">
-    <input type="text" id="peso" placeholder="Peso (ex: 25 Ton)">
+    <input type="text" id="tipo" placeholder="Tipo de Carga">
+    <input type="text" id="peso" placeholder="Peso">
     <select id="rastreado">
       <option value="">Rastreado?</option>
       <option value="SIM">SIM</option>
       <option value="NÃO">NÃO</option>
     </select>
-    <input type="text" id="valor" placeholder="Valor (ex: 5000)">
-    <input type="text" id="whatsapp" placeholder="WhatsApp (apenas números)">
+    <input type="text" id="valor" placeholder="Valor">
+    <input type="text" id="whatsapp" placeholder="WhatsApp">
     <textarea id="observacao" placeholder="Observações"></textarea>
     <button onclick="cadastrarCarga()">Cadastrar Carga</button>
-    <p id="mensagem" style="text-align: center; margin-top: 10px;"></p>
-    <h2 style="text-align:center;">Cargas Atuais</h2>
+    <p id="mensagem"></p>
+
+    <h3>Cargas Atuais</h3>
     <div id="lista"></div>
   </div>
 
   <script>
     const url = "https://script.google.com/macros/s/AKfycbwyC2CHl4xjoEMJ12zrM2GSiTN8FEDe_Jl5aglbpZ9x-VcBNNxx-N8zBcfl7iNHJjrbgg/exec";
 
-    <script>
-function cadastrarCarga() {
-  const dados = {
-    id: document.getElementById("id").value,
-    origem: document.getElementById("origem").value,
-    destino: document.getElementById("destino").value,
-    veiculo: document.getElementById("veiculo").value,
-    tipo: document.getElementById("tipo").value,
-    peso: document.getElementById("peso").value,
-    rastreado: document.getElementById("rastreado").value,
-    valor: document.getElementById("valor").value,
-    whatsapp: document.getElementById("whatsapp").value,
-    observacao: document.getElementById("observacao").value
-  };
+    function cadastrarCarga() {
+      const dados = {
+        id: document.getElementById("id").value,
+        origem: document.getElementById("origem").value,
+        destino: document.getElementById("destino").value,
+        veiculo: document.getElementById("veiculo").value,
+        tipo: document.getElementById("tipo").value,
+        peso: document.getElementById("peso").value,
+        rastreado: document.getElementById("rastreado").value,
+        valor: document.getElementById("valor").value,
+        whatsapp: document.getElementById("whatsapp").value,
+        observacao: document.getElementById("observacao").value
+      };
 
-  const form = new URLSearchParams(dados);
+      const form = new URLSearchParams(dados);
 
-  fetch(url, {
-    method: "POST",
-    body: form
-  })
-  .then(res => res.text())
-  .then(msg => {
-    document.getElementById("mensagem").textContent = msg;
-
-    if (msg.includes("✅ SUCESSO")) {
-      document.querySelectorAll("input, textarea, select").forEach(el => el.value = "");
-      document.getElementById("id").focus();
+      fetch(url, { method: "POST", body: form })
+        .then(res => res.text())
+        .then(msg => {
+          document.getElementById("mensagem").textContent = msg;
+          if (msg.includes("✅")) {
+            document.querySelectorAll("input, textarea, select").forEach(el => el.value = "");
+            document.getElementById("id").focus();
+          }
+          carregarCargas();
+        });
     }
 
-    carregarCargas();
-  })
-  .catch(err => {
-    document.getElementById("mensagem").textContent = "❌ Erro ao enviar dados.";
-  });
-}
+    function removerCarga(id) {
+      const form = new URLSearchParams();
+      form.append("acao", "excluir");
+      form.append("id", id);
 
-   function removerCarga(id) {
-  const form = new URLSearchParams();
-  form.append("acao", "excluir");
-  form.append("id", id);
-
-  fetch(url, {
-    method: "POST",
-    body: form
-  })
-  .then(res => res.text())
-  .then(msg => {
-    alert(msg);
-    carregarCargas();
-  })
-  .catch(() => {
-    alert("Erro ao tentar excluir a carga.");
-  });
-}
+      fetch(url, { method: "POST", body: form })
+        .then(res => res.text())
+        .then(msg => {
+          alert(msg);
+          carregarCargas();
+        });
+    }
 
     function carregarCargas() {
       fetch(url)
@@ -157,15 +112,12 @@ function cadastrarCarga() {
           const lista = document.getElementById("lista");
           lista.innerHTML = "";
           dados.forEach(c => {
-            const div = document.createElement("div");
-            div.className = "carga-card";
-            div.innerHTML = `
-              <strong>ID:</strong> ${c.id}<br>
-              ${c.origem} → ${c.destino}<br>
-              Tipo: ${c.tipo} | Veículo: ${c.veiculo} | Valor: R$ ${c.valor}<br>
-              <button onclick="removerCarga('${c.id}')">🗑️ Remover</button>
+            lista.innerHTML += `
+              <div>
+                <strong>ID:</strong> ${c.id} - ${c.origem} → ${c.destino}
+                <button onclick="removerCarga('${c.id}')">Remover</button>
+              </div>
             `;
-            lista.appendChild(div);
           });
         });
     }
